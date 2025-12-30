@@ -1,16 +1,73 @@
-# React + Vite
+# HNTRS - Creative Design Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+HNTRS is a premium, sports-exclusive creative design studio website. It features a modern, high-performance interface with fluid typography, advanced animations, and a sophisticated aesthetic tailored for the sports industry.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Framework:** React 19
+- **Build Tool:** Vite 7
+- **Styling:** Tailwind CSS 4
+- **Animations:** Motion (formerly Framer Motion)
+- **Routing:** React Router DOM 7
 
-## React Compiler
+## Key Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Premium Visual Design:** A high-end editorial aesthetic with a focus on sports culture.
+- **Fluid Typography:** Responsive text scaling across all device sizes using modern CSS techniques.
+- **Advanced Animations:** Smooth entrance sequences, parallax effects, and interactive micro-animations.
+- **Dynamic Layouts:** Alternating content sections and grid-based case studies.
+- **Global Navigation:** A unified, responsive navbar and footer system.
+- **Custom UI Elements:** Integrated custom cursor and bespoke interactive components.
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+
+Ensure you have Node.js installed on your system.
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone [repository-url]
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd HNTRS
+   ```
+
+3. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+### Development
+
+To start the development server:
+```bash
+npm run dev
+```
+
+### Production
+
+To build the project for production:
+```bash
+npm run build
+```
+
+To preview the production build locally:
+```bash
+npm run preview
+```
+
+## Project Structure
+
+- `src/components/`: Reusable UI components (Navbar, Footer, Hero, etc.)
+- `src/pages/`: Main page views (Home, Work, News, Contact)
+- `src/assets/`: Static assets including images and custom fonts
+- `src/index.css`: Global styles and design system tokens
+
+## License
+
+This project is private and all rights are reserved.
