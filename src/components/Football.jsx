@@ -1,6 +1,6 @@
 const Football = () => {
     return (
-        <section className='relative bg-[#F1F1F1] overflow-hidden' style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 1000px' }}>
+        <section className='hidden lg:block relative bg-[#F1F1F1] overflow-hidden' style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 1000px' }}>
             {/* Full-width image hero with overlaid content */}
             <div className='relative min-h-screen flex items-end'>
                 {/* Background Image */}
