@@ -1,99 +1,112 @@
-import React from 'react'
-import { motion } from 'motion/react'
+import { Link } from 'react-router-dom'
+
+const cards = [
+    {
+        date: "April 28, 2025",
+        category: "Studio News",
+        title: "Welcome to the club: Alex & Merel",
+        image: "https://cdn.prod.website-files.com/6776815c172cb3537fafa18b/680f971f63ef26fed12203c5_Dual%20shot.avif",
+    },
+    {
+        date: "February 21, 2025",
+        category: "Case Study",
+        title: "From Sketch to Stadium: Designing MUFC Hall of Fame",
+        image: "https://cdn.prod.website-files.com/6776815c172cb3537fafa18b/67d1c90483bdbb1ce32746aa_TOPPS-MUFC-HALLOFHEROES-THUMB-2.avif",
+        featured: true
+    },
+    {
+        date: "August 09, 2025",
+        category: "Studio News",
+        title: "A new chapter for GRAPHIC HUNTERS",
+        image: "https://cdn.prod.website-files.com/6776815c172cb3537fafa18b/67c16b52c29c0bf2116111dd_gh.avif",
+    }
+];
 
 const BehindTheHunt = () => {
-    const cards = [
-        {
-            word: "Behind",
-            date: "April 28, 2025",
-            title: "Welcome to the club: Alex & Merel",
-            image: "https://cdn.prod.website-files.com/6776815c172cb3537fafa18b/680f971f63ef26fed12203c5_Dual%20shot.avif",
-        },
-        {
-            word: "The",
-            date: "February 21, 2025",
-            title: "From Sketch to Stadium: Designing MUFC Hall of Fame",
-            image: "https://cdn.prod.website-files.com/6776815c172cb3537fafa18b/67d1c90483bdbb1ce32746aa_TOPPS-MUFC-HALLOFHEROES-THUMB-2.avif",
-            isAccent: true
-        },
-        {
-            word: "Hunt",
-            date: "August 09, 2025",
-            title: "A new chapter for GRAPHIC HUNTERS",
-            image: "https://cdn.prod.website-files.com/6776815c172cb3537fafa18b/67c16b52c29c0bf2116111dd_gh.avif",
-        }
-    ];
-
-    const staggerContainer = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2,
-                delayChildren: 0.1
-            }
-        }
-    };
-
-    const fadeInUp = {
-        hidden: { opacity: 0, y: 60 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 1.2,
-                ease: [0.22, 1, 0.36, 1]
-            }
-        }
-    };
-
     return (
-        <div className='flex flex-col bg-[#1A1A1A] min-h-screen py-32 px-6 sm:px-10 md:px-16 lg:px-24 overflow-hidden relative'>
-            {/* Subtle Background Elements */}
-            <div className='absolute top-0 right-0 w-96 h-96 bg-[#74B858]/5 rounded-full blur-[120px] pointer-events-none' />
-            <div className='absolute bottom-0 left-0 w-96 h-96 bg-white/2 rounded-full blur-[100px] pointer-events-none' />
+        <section className='relative bg-[#111111] overflow-hidden' style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 1000px' }}>
+            {/* Background watermark */}
+            <div className='font-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[20vw] font-black text-white/[0.015] pointer-events-none select-none whitespace-nowrap'>
+                STORIES
+            </div>
 
-            {/* Cards Grid with Integrated Heading */}
-            <motion.div
-                className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-12 lg:gap-x-20 gap-y-24 relative z-10'
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.1 }}
-                variants={staggerContainer}
-            >
-                {cards.map((card, i) => (
-                    <motion.div
-                        key={i}
-                        variants={fadeInUp}
-                        className='flex flex-col group cursor-pointer'
-                    >
-                        {/* Integrated Heading Word */}
-                        <div id="font6" className={`text-[12vw] sm:text-[10vw] xl:text-[8vw] leading-none tracking-tighter uppercase mb-8 text-center ${card.isAccent ? 'text-[#74B858]' : 'text-white'}`}>
-                            {card.word}
-                        </div>
+            <div className='relative z-10 px-8 sm:px-12 md:px-20 lg:px-28 py-28 sm:py-36'>
 
-                        <div className='relative overflow-hidden rounded-[2.5rem] aspect-square mb-8 shadow-2xl'>
-                            <img
-                                src={card.image}
-                                className='w-full h-full object-cover grayscale-30 transition-transform duration-[1.5s] ease-expo group-hover:scale-110 group-hover:grayscale-0'
-                                alt={card.title}
-                            />
-                            <div className='absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700' />
+                {/* Section Header */}
+                <div className='flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-20 sm:mb-28'>
+                    <div>
+                        <span className='inline-flex items-center gap-3 mb-6'>
+                            <span className='w-8 h-px bg-[#74B858]'></span>
+                            <span className='font-gs text-[10px] sm:text-xs text-[#74B858] font-bold tracking-[0.5em] uppercase'>Journal</span>
+                        </span>
+                        <h2 className='font-2 text-[12vw] sm:text-[8vw] md:text-[6vw] lg:text-[5vw] text-white leading-[0.85] tracking-tighter'>
+                            BEHIND<br />
+                            <span className='text-[#74B858]'>THE</span> HUNT
+                        </h2>
+                    </div>
+                    <Link to="/news" className='group shrink-0 mb-2'>
+                        <div className='flex items-center gap-3 font-gs text-[10px] sm:text-xs text-white/40 font-bold tracking-[0.3em] uppercase hover:text-white transition-colors duration-500'>
+                            View all stories
+                            <svg className='w-4 h-4 group-hover:translate-x-1 transition-transform duration-300' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='2'>
+                                <path strokeLinecap='round' strokeLinejoin='round' d='M17 8l4 4m0 0l-4 4m4-4H3' />
+                            </svg>
                         </div>
-                        <div className='mt-4 flex flex-col items-center text-center'>
-                            <div className='flex items-center gap-4 mb-6'>
-                                <div className='w-8 h-px bg-white/10' />
-                                <p id="font7" className='text-[#74B858] text-2xl italic'>{card.date}</p>
-                                <div className='w-8 h-px bg-white/10' />
+                    </Link>
+                </div>
+
+                {/* Cards Grid */}
+                <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-10'>
+                    {cards.map((card, i) => (
+                        <article
+                            key={i}
+                            className={`group cursor-pointer relative ${card.featured ? 'md:col-span-2 xl:col-span-1' : ''}`}
+                        >
+                            {/* Image */}
+                            <div className='relative overflow-hidden rounded-2xl sm:rounded-3xl aspect-[4/5] mb-8'>
+                                <img
+                                    src={card.image}
+                                    loading="lazy"
+                                    decoding="async"
+                                    width="600"
+                                    height="750"
+                                    className='w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[2s] ease-expo'
+                                    alt={card.title}
+                                />
+                                {/* Gradient overlay */}
+                                <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700' />
+
+                                {/* Hover arrow */}
+                                <div className='absolute top-6 right-6'>
+                                    <div className='w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/0 border border-white/0 group-hover:bg-white group-hover:border-white flex items-center justify-center transition-all duration-500 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'>
+                                        <svg className='w-4 h-4 text-black -rotate-45' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='2'>
+                                            <path strokeLinecap='round' strokeLinejoin='round' d='M17 8l4 4m0 0l-4 4m4-4H3' />
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                {/* Category pill on image */}
+                                <div className='absolute bottom-6 left-6'>
+                                    <span className='font-gs text-[9px] sm:text-[10px] font-bold tracking-[0.2em] uppercase text-white bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10'>
+                                        {card.category}
+                                    </span>
+                                </div>
                             </div>
-                            <h3 id="font" className='text-white text-4xl font-bold leading-[1.1] tracking-tight group-hover:text-[#74B858] transition-colors duration-500 uppercase max-w-[90%]'>
-                                {card.title}
-                            </h3>
-                        </div>
-                    </motion.div>
-                ))}
-            </motion.div>
-        </div>
+
+                            {/* Content */}
+                            <div className='px-1'>
+                                <div className='flex items-center gap-3 mb-4'>
+                                    <div className='w-1.5 h-1.5 rounded-full bg-[#74B858]'></div>
+                                    <p className='font-7 text-[#74B858] text-sm sm:text-base italic'>{card.date}</p>
+                                </div>
+                                <h3 className='font-gs text-white text-lg sm:text-xl md:text-2xl font-bold leading-[1.15] tracking-tight group-hover:text-[#74B858] transition-colors duration-500 uppercase'>
+                                    {card.title}
+                                </h3>
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </div>
+        </section>
     )
 }
 

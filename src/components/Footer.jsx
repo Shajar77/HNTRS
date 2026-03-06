@@ -1,131 +1,132 @@
-import React from 'react'
-import { motion } from 'motion/react'
 import { Link } from 'react-router-dom'
 
+const menuItems = [
+    { name: 'Home', path: '/' },
+    { name: 'Work', path: '/work' },
+    { name: 'News', path: '/news' },
+    { name: 'Contact', path: '/contact' }
+];
+
 const Footer = () => {
-    const menuItems = [
-        { name: 'Home', path: '/' },
-        { name: 'Work', path: '/work' },
-        { name: 'News', path: '/news' },
-        { name: 'Contact', path: '/contact' }
-    ];
-
     return (
-        <footer className='relative min-w-screen bg-[#F1F1F1] overflow-hidden'>
-            {/* Main Section */}
-            <div className='px-6 sm:px-10 md:px-16 lg:px-24 pt-32 pb-12 relative z-10'>
-                {/* Large HNTRS Logo + Tagline */}
-                <motion.div
-                    className='mb-32'
-                    initial={{ opacity: 0, y: 60 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-                >
-                    <div className='flex flex-col xl:flex-row xl:items-end xl:justify-between gap-12'>
-                        {/* Logo */}
-                        <div className="group cursor-default">
-                            <div id='font2' className='flex items-start text-[6rem] sm:text-[8rem] md:text-[10rem] lg:text-[12rem] xl:text-[15vw] leading-[0.75] tracking-tighter opacity-90 transition-transform duration-700 group-hover:scale-[1.02]'>
-                                <span className='text-black'>HNTRS</span>
-                                <span className='text-[12px] sm:text-[16px] md:text-[20px] border-2 border-black rounded-full h-5 w-5 sm:h-7 sm:w-7 md:h-10 md:w-10 flex items-center justify-center mt-4 sm:mt-6 font-normal'>R</span>
-                            </div>
-                            <div id="font4" className='flex gap-4 text-3xl sm:text-4xl md:text-5xl text-[#DE5127] mt-6 tracking-tighter'>
-                                <span className='font-normal uppercase'>Sports</span>
-                                <span id="font7" className='italic'>Exclusive</span>
-                            </div>
-                        </div>
-                    </div>
-                </motion.div>
+        <footer className='relative w-full bg-[#0A0A0A] overflow-hidden' style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 800px' }}>
 
-                {/* Links Grid */}
-                <div className='grid grid-cols-2 md:grid-cols-4 gap-12 mb-32 border-t border-black/10 pt-20'>
+            {/* Giant background watermark */}
+            <div className='font-2 absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[35%] text-[28vw] font-black text-white/[0.02] pointer-events-none select-none whitespace-nowrap leading-none'>
+                HNTRS
+            </div>
+
+            {/* CTA Section */}
+            <div className='relative z-10 px-8 sm:px-12 md:px-20 lg:px-28 pt-28 sm:pt-36 md:pt-44 pb-20 sm:pb-28 border-b border-white/5'>
+                <div className='flex flex-col lg:flex-row lg:items-end justify-between gap-12 lg:gap-20'>
+                    <div>
+                        <p className='font-gs text-[10px] sm:text-xs text-[#DE5127] font-bold tracking-[0.5em] uppercase mb-6 flex items-center gap-3'>
+                            <span className='w-8 h-px bg-[#DE5127]'></span>
+                            Let's work together
+                        </p>
+                        <h2 className='font-2 text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[6vw] text-white leading-[0.85] tracking-tighter'>
+                            READY TO<br />
+                            <span className='text-[#DE5127]'>HUNT?</span>
+                        </h2>
+                    </div>
+                    <Link to="/contact" className='group shrink-0 mb-2'>
+                        <div className='relative bg-[#DE5127] text-white rounded-full px-10 sm:px-14 py-5 sm:py-6 overflow-hidden'>
+                            <span className='absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-expo'></span>
+                            <span className='relative z-10 font-gs text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] group-hover:text-[#DE5127] transition-colors duration-500 flex items-center gap-3'>
+                                Start a Project
+                                <svg className='w-4 h-4 group-hover:translate-x-1 transition-transform duration-300' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='2'>
+                                    <path strokeLinecap='round' strokeLinejoin='round' d='M17 8l4 4m0 0l-4 4m4-4H3' />
+                                </svg>
+                            </span>
+                        </div>
+                    </Link>
+                </div>
+            </div>
+
+            {/* Links Grid */}
+            <div className='relative z-10 px-8 sm:px-12 md:px-20 lg:px-28 py-20 sm:py-28'>
+                <div className='grid grid-cols-2 md:grid-cols-4 gap-12 lg:gap-16'>
                     {/* Navigation */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: 0.1 }}
-                    >
-                        <h4 id="font4" className='text-[10px] font-normal uppercase tracking-[0.4em] text-black/20 mb-10'>Navigation</h4>
-                        <ul id="font4" className='space-y-4'>
+                    <div>
+                        <h4 className='font-gs text-[10px] font-bold uppercase tracking-[0.4em] text-white/20 mb-8'>Navigation</h4>
+                        <ul className='space-y-5'>
                             {menuItems.map((item, i) => (
                                 <li key={i}>
-                                    <Link to={item.path} className='text-xl font-normal text-black hover:text-[#DE5127] transition-all duration-300 uppercase tracking-tight'>
+                                    <Link to={item.path} className='group/link font-gs text-sm sm:text-base text-white/60 hover:text-white transition-all duration-300 uppercase tracking-wide flex items-center gap-0 hover:gap-2'>
+                                        <span className='w-0 h-px bg-[#DE5127] group-hover/link:w-4 transition-all duration-300'></span>
                                         {item.name}
                                     </Link>
                                 </li>
                             ))}
                         </ul>
-                    </motion.div>
+                    </div>
 
                     {/* Services */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: 0.2 }}
-                    >
-                        <h4 id="font4" className='text-[10px] font-normal uppercase tracking-[0.4em] text-black/20 mb-10'>Expertise</h4>
-                        <ul id="font4" className='space-y-4'>
+                    <div>
+                        <h4 className='font-gs text-[10px] font-bold uppercase tracking-[0.4em] text-white/20 mb-8'>Expertise</h4>
+                        <ul className='space-y-5'>
                             {['Branding', 'Motion', 'Content', 'Product'].map((item, i) => (
                                 <li key={i}>
-                                    <a href="#" className='text-xl font-normal text-black hover:text-[#DE5127] transition-all duration-300 uppercase tracking-tight'>
+                                    <a href="#" className='group/link font-gs text-sm sm:text-base text-white/60 hover:text-white transition-all duration-300 uppercase tracking-wide flex items-center gap-0 hover:gap-2'>
+                                        <span className='w-0 h-px bg-[#DE5127] group-hover/link:w-4 transition-all duration-300'></span>
                                         {item}
                                     </a>
                                 </li>
                             ))}
                         </ul>
-                    </motion.div>
+                    </div>
 
                     {/* Social */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: 0.3 }}
-                    >
-                        <h4 id="font4" className='text-[10px] font-normal uppercase tracking-[0.4em] text-black/20 mb-10'>Connect</h4>
-                        <ul id="font4" className='space-y-4'>
+                    <div>
+                        <h4 className='font-gs text-[10px] font-bold uppercase tracking-[0.4em] text-white/20 mb-8'>Connect</h4>
+                        <ul className='space-y-5'>
                             {['Instagram', 'LinkedIn', 'Behance', 'Twitter'].map((item, i) => (
                                 <li key={i}>
-                                    <a href="#" className='text-xl font-normal text-black hover:text-[#DE5127] transition-all duration-300 uppercase tracking-tight'>
+                                    <a href="#" className='group/link font-gs text-sm sm:text-base text-white/60 hover:text-white transition-all duration-300 uppercase tracking-wide flex items-center gap-0 hover:gap-2'>
+                                        <span className='w-0 h-px bg-[#DE5127] group-hover/link:w-4 transition-all duration-300'></span>
                                         {item}
                                     </a>
                                 </li>
                             ))}
                         </ul>
-                    </motion.div>
+                    </div>
 
                     {/* Contact */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: 0.4 }}
-                    >
-                        <h4 id="font4" className='text-[10px] font-normal uppercase tracking-[0.4em] text-black/20 mb-10'>Inquiries</h4>
-                        <div id="font4" className='space-y-6'>
-                            <a href="mailto:hello@graphichunters.com" className='block text-xl font-normal text-black hover:text-[#DE5127] transition-all duration-300 uppercase tracking-tight'>
-                                hello@graphichunters.com
+                    <div>
+                        <h4 className='font-gs text-[10px] font-bold uppercase tracking-[0.4em] text-white/20 mb-8'>Inquiries</h4>
+                        <div className='space-y-5'>
+                            <a href="mailto:graphichunters.com" className='block font-gs text-sm sm:text-base text-white/60 hover:text-[#DE5127] transition-all duration-300 tracking-wide break-all'>
+                                graphichunters.com
                             </a>
-                            <p className='text-xl font-normal text-black uppercase tracking-tight'>
+                            <p className='font-gs text-sm sm:text-base text-white/60 tracking-wide'>
                                 +92 321 168 8059
                             </p>
-                            <p className='text-xs font-normal text-black/40 mt-6 uppercase tracking-widest'>
-                                Lahore, Pakistan
-                            </p>
+                            <div className='flex items-center gap-2 mt-4'>
+                                <div className='w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse'></div>
+                                <p className='font-gs text-[10px] text-white/30 uppercase tracking-[0.3em]'>
+                                    Lahore, Pakistan
+                                </p>
+                            </div>
                         </div>
-                    </motion.div>
+                    </div>
                 </div>
+            </div>
 
-                {/* Bottom Bar */}
-                <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-8 pt-12 border-t border-black/10'>
-                    <p id="font4" className='text-[10px] font-normal text-black/20 uppercase tracking-[0.3em]'>
-                        © 2025 GRAPHICHUNTERS®. All rights reserved.
-                    </p>
-                    <div id="font4" className='flex gap-10 text-[10px] font-normal text-black/20 uppercase tracking-[0.3em]'>
-                        <a href="#" className='hover:text-black transition-colors duration-300'>Privacy Policy</a>
-                        <a href="#" className='hover:text-black transition-colors duration-300'>Terms of Service</a>
+            {/* Bottom Bar */}
+            <div className='relative z-10 px-8 sm:px-12 md:px-20 lg:px-28 py-8 border-t border-white/5'>
+                <div className='flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6'>
+                    <div className='flex items-center gap-4'>
+                        {/* Mini logo */}
+                        <span className='font-2 text-xl text-white/20 tracking-tighter'>HNTRS</span>
+                        <span className='w-px h-4 bg-white/10'></span>
+                        <p className='font-gs text-[9px] text-white/20 uppercase tracking-[0.3em]'>
+                            © 2025 All rights reserved
+                        </p>
+                    </div>
+                    <div className='flex flex-wrap gap-6'>
+                        <a href="#" className='font-gs text-[9px] text-white/20 uppercase tracking-[0.3em] hover:text-white/60 transition-colors duration-300'>Privacy</a>
+                        <a href="#" className='font-gs text-[9px] text-white/20 uppercase tracking-[0.3em] hover:text-white/60 transition-colors duration-300'>Terms</a>
+                        <a href="#" className='font-gs text-[9px] text-white/20 uppercase tracking-[0.3em] hover:text-white/60 transition-colors duration-300'>Cookies</a>
                     </div>
                 </div>
             </div>

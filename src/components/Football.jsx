@@ -1,120 +1,69 @@
-import React from 'react'
-import { motion, useScroll, useTransform } from 'motion/react'
-
 const Football = () => {
-    const { scrollYProgress } = useScroll();
-    const yText = useTransform(scrollYProgress, [0, 1], [0, -250]);
-    const yImage = useTransform(scrollYProgress, [0, 1], [0, -100]);
-
-    const staggerContainer = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.2,
-                delayChildren: 0.1
-            }
-        }
-    };
-
-    const fadeInUp = {
-        hidden: { opacity: 0, y: 60 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 1.2,
-                ease: [0.22, 1, 0.36, 1]
-            }
-        }
-    };
-
     return (
-        <div className='flex flex-col xl:flex-row min-h-screen bg-[#F1F1F1] overflow-hidden relative'>
-            {/* Background Watermark */}
-            <motion.div
-                className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[25vw] font-black text-black/2 pointer-events-none select-none z-0'
-                id="font6"
-                style={{ y: yText }}
-            >
-                DERBBY
-            </motion.div>
+        <section className='relative bg-[#F1F1F1] overflow-hidden' style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 1000px' }}>
+            {/* Full-width image hero with overlaid content */}
+            <div className='relative min-h-screen flex items-end'>
+                {/* Background Image */}
+                <div className='absolute inset-0 group'>
+                    <img
+                        src="/ball.webp"
+                        alt="Derbby Project"
+                        loading="lazy"
+                        decoding="async"
+                        width="1920"
+                        height="1080"
+                        className='w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-[2s] ease-expo'
+                    />
+                    {/* Gradient overlays for text readability */}
+                    <div className='absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent' />
+                    <div className='absolute inset-0 bg-gradient-to-r from-black/30 to-transparent' />
+                </div>
 
-            {/* Content Section */}
-            <motion.div
-                className='flex flex-col text-center xl:text-left items-center xl:items-start justify-center py-32 px-6 sm:px-10 md:px-16 lg:px-24 w-full xl:w-1/2 relative z-10'
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.3 }}
-                variants={staggerContainer}
-            >
-                <motion.p
-                    className='text-[#DE5127] text-xs font-bold tracking-[0.5em] uppercase mb-16'
-                    variants={fadeInUp}
-                >
-                    Featured Campaign
-                </motion.p>
-
-                <motion.h2
-                    id="font2"
-                    className='text-[10vw] sm:text-[10vw] xl:text-[6vw] text-black leading-none mb-12 tracking-tighter'
-                    variants={fadeInUp}
-                >
+                {/* Giant watermark text */}
+                <div className='font-6 absolute top-[40%] sm:top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[22vw] sm:text-[15vw] xl:text-[25vw] font-black text-white/[0.03] pointer-events-none select-none z-[1] whitespace-nowrap'>
                     DERBBY
-                </motion.h2>
+                </div>
 
-                <div className='max-w-lg relative z-10'>
-                    <motion.p
-                        id="font"
-                        className='text-[#DE5127] text-2xl sm:text-3xl font-bold mb-6 uppercase tracking-tight'
-                        variants={fadeInUp}
-                    >
-                        Global Sports Campaign
-                    </motion.p>
+                {/* Content */}
+                <div className='relative z-10 w-full px-6 sm:px-8 md:px-20 lg:px-28 pb-10 sm:pb-14 md:pb-28 pt-40 lg:pt-60'>
+                    {/* Top label */}
+                    <div className='mb-4 sm:mb-5 md:mb-10'>
+                        <span className='inline-flex items-center gap-2.5 md:gap-3'>
+                            <span className='w-6 sm:w-6 md:w-8 h-px bg-[#DE5127]'></span>
+                            <span className='font-gs text-[10px] sm:text-[10px] md:text-xs text-[#DE5127] font-bold tracking-[0.4em] sm:tracking-[0.5em] uppercase'>Featured Campaign</span>
+                        </span>
+                    </div>
 
-                    <motion.p
-                        id="font7"
-                        className='text-black/80 text-3xl sm:text-4xl lg:text-5xl italic leading-[1.1] mb-16 tracking-tight'
-                        variants={fadeInUp}
-                    >
-                        Redefining the visual language of modern football culture.
-                    </motion.p>
+                    {/* Main title */}
+                    <h2 className='font-2 text-[15vw] sm:text-[12vw] lg:text-[8vw] text-white leading-[0.85] tracking-tighter mb-6 sm:mb-8 md:mb-12'>
+                        DERBBY
+                    </h2>
 
-                    <div className='flex flex-col xl:flex-row items-center gap-12'>
-                        <motion.p
-                            id="font"
-                            className='text-black/30 text-[10px] font-bold tracking-[0.4em] uppercase'
-                            variants={fadeInUp}
-                        >
-                            Campaign / Visual Identity / Digital
-                        </motion.p>
+                    {/* Description */}
+                    <div className='mb-8 sm:mb-8 md:mb-0 max-w-[320px] sm:max-w-sm md:max-w-xl'>
+                        <p className='font-7 text-white/90 text-xl sm:text-xl md:text-3xl lg:text-4xl italic leading-[1.25] tracking-tight'>
+                            Redefining the visual language of modern football culture.
+                        </p>
+                    </div>
+
+                    {/* Tags row */}
+                    <div className='flex flex-wrap items-center gap-4 sm:gap-3 md:gap-10 mt-0 md:mt-10'>
+                        <div className='flex items-center gap-2 md:gap-3'>
+                            <div className='w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#DE5127]'></div>
+                            <span className='font-gs text-white/40 text-[10px] md:text-[10px] font-bold tracking-[0.3em] uppercase'>Campaign</span>
+                        </div>
+                        <div className='flex items-center gap-2 md:gap-3'>
+                            <div className='w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#DE5127]'></div>
+                            <span className='font-gs text-white/40 text-[10px] md:text-[10px] font-bold tracking-[0.3em] uppercase'>Visual Identity</span>
+                        </div>
+                        <div className='flex items-center gap-2 md:gap-3'>
+                            <div className='w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-[#DE5127]'></div>
+                            <span className='font-gs text-white/40 text-[10px] md:text-[10px] font-bold tracking-[0.3em] uppercase'>Digital</span>
+                        </div>
                     </div>
                 </div>
-            </motion.div>
-
-            {/* Image Section */}
-            <div className='w-full xl:w-1/2 p-6 sm:p-10 md:p-16 lg:p-20 xl:p-24 flex items-center justify-center'>
-                <motion.div
-                    className='w-full h-full min-h-[50vh] xl:min-h-0 aspect-square xl:aspect-auto overflow-hidden relative group rounded-[3rem] xl:rounded-[4rem] shadow-2xl'
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true, amount: 0.3 }}
-                    transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-                >
-                    <motion.div
-                        className='w-full h-full'
-                        style={{ y: yImage }}
-                    >
-                        <img
-                            src="./ball.webp"
-                            alt="Derbby Project"
-                            className='w-full h-full object-cover grayscale-30 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-[1.5s] ease-expo'
-                        />
-                    </motion.div>
-                    <div className='absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-1000' />
-                </motion.div>
             </div>
-        </div>
+        </section>
     )
 }
 

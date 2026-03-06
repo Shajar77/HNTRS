@@ -1,147 +1,163 @@
-import React, { useState, useEffect } from 'react'
-import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react'
-import { Link } from 'react-router-dom'
+import { useRef, useCallback, useEffect, useState } from 'react'
 
 const Home = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { scrollY } = useScroll();
+    const spotRef = useRef(null)
+    const sectionRef = useRef(null)
+    const rectRef = useRef(null)
+    const rafRef = useRef(null)
+    const pointRef = useRef({ x: 0, y: 0 })
+    const [isInteractive, setIsInteractive] = useState(false)
 
-    // Parallax effects for hero
-    const y1 = useTransform(scrollY, [0, 500], [0, -100]);
-    const y2 = useTransform(scrollY, [0, 500], [0, 50]);
-    const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+    useEffect(() => {
+        const pointerMedia = window.matchMedia('(pointer: fine)')
+        const reduceMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)')
 
-    // Animation variants
-    const fadeInUp = {
-        hidden: { opacity: 0, y: 60 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: {
-                duration: 1.2,
-                ease: [0.22, 1, 0.36, 1]
-            }
+        const updateEnabled = () => {
+            setIsInteractive(pointerMedia.matches && !reduceMotionMedia.matches)
         }
-    };
 
-    const fadeIn = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                duration: 1,
-                ease: [0.22, 1, 0.36, 1]
-            }
-        }
-    };
+        updateEnabled()
+        pointerMedia.addEventListener('change', updateEnabled)
+        reduceMotionMedia.addEventListener('change', updateEnabled)
 
-    const staggerContainer = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1,
-                delayChildren: 0.2
-            }
+        return () => {
+            pointerMedia.removeEventListener('change', updateEnabled)
+            reduceMotionMedia.removeEventListener('change', updateEnabled)
         }
-    };
+    }, [])
+
+    useEffect(() => {
+        return () => {
+            if (rafRef.current) cancelAnimationFrame(rafRef.current)
+        }
+    }, [])
+
+    const updateRect = useCallback(() => {
+        if (!sectionRef.current) return
+        rectRef.current = sectionRef.current.getBoundingClientRect()
+    }, [])
+
+    useEffect(() => {
+        if (!isInteractive) return
+        updateRect()
+        window.addEventListener('resize', updateRect, { passive: true })
+        window.addEventListener('scroll', updateRect, { passive: true })
+        return () => {
+            window.removeEventListener('resize', updateRect)
+            window.removeEventListener('scroll', updateRect)
+        }
+    }, [isInteractive, updateRect])
+
+    const applyTransform = useCallback(() => {
+        rafRef.current = null
+        if (!spotRef.current || !rectRef.current) return
+        const x = pointRef.current.x - rectRef.current.left - 100
+        const y = pointRef.current.y - rectRef.current.top - 100
+        spotRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`
+    }, [])
+
+    const handlePointerMove = useCallback((e) => {
+        if (!isInteractive) return
+        pointRef.current = { x: e.clientX, y: e.clientY }
+        if (rafRef.current) return
+        rafRef.current = requestAnimationFrame(applyTransform)
+    }, [applyTransform, isInteractive])
+
+    const handlePointerEnter = useCallback(() => {
+        if (!isInteractive) return
+        updateRect()
+    }, [isInteractive, updateRect])
+
+    const handlePointerLeave = useCallback(() => {
+        if (!spotRef.current) return
+        spotRef.current.style.transform = 'translate3d(calc(50vw - 100px), calc(50vh - 100px), 0)'
+    }, [])
 
     return (
-        <div className='relative bg-[#F1F1F1] overflow-hidden selection:bg-[#DE5127] selection:text-white'>
-            {/* Subtle Animated Background Gradient */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <motion.div
-                    className="absolute -top-[20%] -left-[10%] w-[70%] h-[70%] bg-[#DE5127]/5 rounded-full blur-[120px]"
-                    animate={{
-                        x: [0, 50, 0],
-                        y: [0, 30, 0],
-                    }}
-                    transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div
-                    className="absolute -bottom-[10%] -right-[5%] w-[60%] h-[60%] bg-black/5 rounded-full blur-[100px]"
-                    animate={{
-                        x: [0, -40, 0],
-                        y: [0, -20, 0],
-                    }}
-                    transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                />
-            </div>
+        <section
+            ref={sectionRef}
+            className='relative bg-[#F1F1F1] overflow-hidden selection:bg-[#DE5127] selection:text-white min-h-screen'
+            onPointerMove={handlePointerMove}
+            onPointerEnter={handlePointerEnter}
+            onPointerLeave={handlePointerLeave}
+        >
 
-            {/* Hero Content */}
-            <div className='flex flex-col justify-center min-h-screen p-6 sm:p-10 md:p-16 lg:p-24 tracking-tighter relative z-10'>
+            {/* Background grid */}
+            <div className='absolute inset-0 pointer-events-none opacity-[0.15]'
+                style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.3) 1px, transparent 1px)', backgroundSize: '120px 120px' }}
+            ></div>
 
-                {/* Main Content with Parallax */}
-                <motion.div
-                    className='flex flex-col items-center xl:items-end w-full mt-[-5vh]'
-                    style={{ y: y1, opacity }}
+            {/* Mouse-following orange glow */}
+            <div className='absolute inset-0 pointer-events-none overflow-hidden'>
+                <div
+                    ref={spotRef}
+                    className='absolute transition-transform duration-500 ease-out'
+                    style={{ top: 0, left: 0, transform: 'translate3d(calc(50vw - 100px), calc(50vh - 100px), 0)', willChange: 'transform' }}
                 >
-                    <motion.div
-                        className='flex flex-col items-center xl:items-end'
-                        initial="hidden"
-                        animate="visible"
-                        variants={staggerContainer}
-                    >
-                        <motion.div
-                            id='font2'
-                            className='flex items-baseline text-[18vw] sm:text-[15vw] xl:text-fluid-huge opacity-90 leading-[0.75]'
-                            variants={fadeInUp}
-                        >
-                            <p className='tracking-tighter'>HNTRS</p>
-                            <p className='text-[3vw] sm:text-[2vw] xl:text-[1.5vw] 2xl:text-3xl border-2 sm:border-4 border-black rounded-full h-[6vw] w-[6vw] sm:h-[4vw] sm:w-[4vw] 2xl:h-14 2xl:w-14 flex items-center justify-center text-center ml-2 sm:ml-4 mb-[4vw] 2xl:mb-12 font-black'>R</p>
-                        </motion.div>
-
-                        <motion.div
-                            id="font"
-                            className='flex text-[10vw] sm:text-[8vw] xl:text-[8vw] 2xl:text-[11rem] text-[#DE5127] mt-[-2vw] tracking-tighter gap-4 sm:gap-8'
-                            variants={fadeInUp}
-                        >
-                            <p className='font-black uppercase'>Sports</p>
-                            <p id="font7" className='italic'>Exclusive</p>
-                        </motion.div>
-                    </motion.div>
-                </motion.div>
-
-                {/* Bottom Section */}
-                <div className='flex flex-col xl:flex-row justify-between items-center xl:items-end w-full mt-20 xl:mt-0 gap-12 xl:gap-0'>
-                    <motion.div
-                        className='max-w-4xl text-center xl:text-left'
-                        initial="hidden"
-                        animate="visible"
-                        variants={fadeIn}
-                        transition={{ delay: 1, duration: 1 }}
-                        style={{ y: y2 }}
-                    >
-                        <p className='text-[3.5vw] sm:text-[2vw] xl:text-[1.1vw] 2xl:text-lg leading-none tracking-tight'>
-                            <span id="font" className='font-light uppercase opacity-20 block mb-1'>The creative design studio</span>
-                            <span id='font7' className='italic text-[#DE5127] text-[5vw] sm:text-[3.5vw] xl:text-[2vw] 2xl:text-3xl'>exclusively in sports</span>
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 1.5, duration: 1 }}
-                        className='flex flex-col items-center xl:items-end gap-6'
-                    >
-                        <div className='flex flex-col items-center xl:items-end gap-1'>
-                            <p id="font" className='text-[10px] font-black opacity-20 tracking-[0.3em] uppercase'>Est. 2021</p>
-                            <div className='w-40 h-px bg-black/10' />
-                        </div>
-
-                        {/* Modern Scroll Indicator */}
-                        <motion.div
-                            className="flex flex-col items-center gap-3"
-                            animate={{ y: [0, 10, 0] }}
-                            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                        >
-                            <p id="font" className='text-[10px] font-black opacity-40 tracking-widest uppercase xl:vertical-text'>Scroll</p>
-                            <div className="w-px h-12 bg-gradient-to-b from-black/40 to-transparent" />
-                        </motion.div>
-                    </motion.div>
+                    {/* Outer ring */}
+                    <div className='w-[200px] h-[200px] rounded-full border border-[#DE5127]/20 flex items-center justify-center'>
+                        {/* Inner glow */}
+                        <div className='w-[120px] h-[120px] rounded-full'
+                            style={{ background: 'radial-gradient(circle, rgba(222,81,39,0.25) 0%, rgba(222,81,39,0.08) 50%, transparent 70%)' }}
+                        ></div>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            {/* Main layout */}
+            <div className='relative z-10 flex flex-col justify-between min-h-screen px-8 sm:px-12 md:px-20 lg:px-28 pt-28 sm:pt-36 pb-10 sm:pb-14'>
+
+                {/* Top right label */}
+                <div className='flex justify-end'>
+                    <div className='flex items-center gap-3'>
+                        <span className='w-10 h-px bg-[#DE5127]'></span>
+                        <span className='font-gs text-[9px] sm:text-[10px] text-[#DE5127] font-bold tracking-[0.5em] uppercase'>Creative Studio</span>
+                    </div>
+                </div>
+
+                {/* Center — HNTRS */}
+                <div className='flex flex-col items-center justify-center flex-1 py-8'>
+                    {/* Overline */}
+                    <p className='font-gs text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.6em] text-black/25 mb-8 sm:mb-10'>
+                        Graphic Hunters®
+                    </p>
+
+                    {/* Main title with R at end */}
+                    <div className='flex items-center justify-center'>
+                        <h1 className='font-2 text-[15vw] sm:text-[18vw] md:text-[15vw] lg:text-[13vw] xl:text-[11vw] text-black leading-[0.82] tracking-tighter'>
+                            HNTRS
+                        </h1>
+                        <div className='w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full bg-[#DE5127] flex items-center justify-center shadow-lg shadow-[#DE5127]/20 ml-2 sm:ml-3 md:ml-4'>
+                            <span className='font-2 text-white text-[7px] sm:text-[9px] md:text-xs'>R</span>
+                        </div>
+                    </div>
+
+                    {/* Tagline */}
+                    <div className='mt-8 sm:mt-10 flex items-center gap-3 sm:gap-5'>
+                        <span className='font-gs text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.5em] text-black/20'>The design studio</span>
+                        <span className='w-6 sm:w-10 h-px bg-[#DE5127]/40'></span>
+                        <span className='font-7 italic text-[#DE5127] text-base sm:text-xl md:text-2xl tracking-tight'>exclusively in sports</span>
+                    </div>
+                </div>
+
+                {/* Bottom bar */}
+                <div className='flex justify-between items-center'>
+                    <div className='flex items-center gap-3'>
+                        <div className='w-1.5 h-1.5 rounded-full bg-[#DE5127] animate-pulse'></div>
+                        <span className='font-gs text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.4em] text-black/20'>Lahore, PK</span>
+                    </div>
+
+                    <div className='flex flex-col items-center gap-2'>
+                        <div className='w-px h-10 relative overflow-hidden'>
+                            <div className='absolute inset-0 bg-gradient-to-b from-[#DE5127] to-transparent animate-scroll-line'></div>
+                        </div>
+                        <span className='font-gs text-[7px] font-bold uppercase tracking-[0.5em] text-black/20'>Scroll</span>
+                    </div>
+
+                    <span className='font-gs text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.4em] text-black/20'>Est. 2021</span>
+                </div>
+            </div>
+        </section>
     )
 }
 

@@ -1,85 +1,72 @@
 @import "tailwindcss";
 
-/* In index.css */
 body,
 html {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
-    /* This stops horizontal scrolling globally */
     width: 100%;
 }
 
-@font-face {
-    font-family: font1;
-    src: url("./font1.ttf");
-}
+
 
 @font-face {
     font-family: font2;
-    src: url("./font2.ttf");
+    src: url("/font2.ttf") format("truetype");
+    font-display: swap;
 }
 
-@font-face {
-    font-family: font4;
-    src: url("./font4.ttf");
-}
 
-@font-face {
-    font-family: font5;
-    src: url("./font5.ttf");
-}
 
 @font-face {
     font-family: font6;
-    src: url("./font6.woff2");
+    src: url("/font6.woff2") format("woff2");
+    font-display: swap;
 }
 
 @font-face {
     font-family: font7;
-    src: url("./font7.woff2");
+    src: url("/font7.woff2") format("woff2");
+    font-display: swap;
 }
 
 @font-face {
     font-family: font8;
-    src: url("./font8.woff2");
+    src: url("/font8.woff2") format("woff2");
+    font-display: swap;
 }
 
 @font-face {
     font-family: font9;
-    src: url("./font9.woff2");
+    src: url("/font9.woff2") format("woff2");
+    font-display: swap;
 }
 
-#font {
-    font-family: "Google Sans Flex";
+/* Font utility classes (replaces duplicate id="#fontN" pattern) */
+.font-gs {
+    font-family: "Google Sans Flex", sans-serif;
 }
 
-#font2 {
-    font-family: "font2";
+.font-2 {
+    font-family: "font2", sans-serif;
 }
 
-#font4 {
-    font-family: "font4";
+
+
+.font-6 {
+    font-family: "font6", sans-serif;
 }
 
-#font5 {
-    font-family: "font5";
+.font-7 {
+    font-family: "font7", sans-serif;
 }
 
-#font6 {
-    font-family: "font6";
+.font-8 {
+    font-family: "font8", sans-serif;
 }
 
-#font7 {
-    font-family: "font7";
-}
-
-#font8 {
-    font-family: "font8";
-}
-
-#font9 {
-    font-family: "font9";
+.font-9 {
+    font-family: "font9", sans-serif;
 }
 
 /* Modern Design Utilities */
@@ -100,37 +87,21 @@ body {
     -webkit-font-smoothing: antialiased;
 }
 
-.noise-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    opacity: 0.04;
-    z-index: 9999;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+img,
+video,
+canvas {
+    max-width: 100%;
+    height: auto;
 }
 
-.glass {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
+
 
 /* Fluid Typography */
 .text-fluid-huge {
     font-size: clamp(4rem, 15vw, 18rem);
 }
 
-.text-fluid-large {
-    font-size: clamp(3rem, 10vw, 12rem);
-}
 
-.text-fluid-medium {
-    font-size: clamp(2rem, 5vw, 6rem);
-}
 
 ::selection {
     background: var(--accent);
@@ -154,24 +125,38 @@ body {
     background: var(--accent);
 }
 
-.vertical-text {
-    writing-mode: vertical-rl;
-    text-orientation: mixed;
-}
+
 
 .ease-expo {
     transition-timing-function: var(--ease-expo);
 }
 
-/* Custom Cursor (Optional but modern) */
-.custom-cursor {
-    width: 20px;
-    height: 20px;
-    background: var(--accent);
-    border-radius: 50%;
-    position: fixed;
-    pointer-events: none;
-    z-index: 10000;
-    mix-blend-mode: difference;
-    transition: transform 0.3s var(--ease-expo);
+@keyframes scroll-line {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(100%);
+    }
+}
+
+.animate-scroll-line {
+    animation: scroll-line 2s ease-in-out infinite;
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
 }
