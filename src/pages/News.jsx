@@ -8,7 +8,7 @@ const newsArticles = [
         date: "April 3, 2025",
         title: "HNTRS Anime Legends Collection Launch",
         category: "Collection Drop",
-        image: "/src/assets/download (3).jpg",
+        image: "/anime/news-goku.jpg",
         readTime: "5 min",
         author: "HNTRS Team",
         trending: true,
