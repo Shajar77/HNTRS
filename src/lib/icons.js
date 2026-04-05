@@ -1,0 +1,30 @@
+// ─── Centralized icon re-exports (Problem 1: lucide-react tree shaking) ───
+// Import only the icons actually used across the app.
+// This ensures the bundler can tree-shake the rest of lucide-react (~959KB → ~50KB).
+// 
+// Usage: import { ShoppingCart, Store } from '../lib/icons'
+
+export { ChevronDown } from 'lucide-react'
+export { Store } from 'lucide-react'
+export { ShoppingBag } from 'lucide-react'
+export { Package } from 'lucide-react'
+export { ShoppingCart } from 'lucide-react'
+export { Search } from 'lucide-react'
+export { X } from 'lucide-react'
+export { Clock } from 'lucide-react'
+export { User } from 'lucide-react'
+export { Wallet } from 'lucide-react'
+export { Check } from 'lucide-react'
+export { Star } from 'lucide-react'
+export { Diamond } from 'lucide-react'
+export { Zap } from 'lucide-react'
+export { Crown } from 'lucide-react'
+export { Info } from 'lucide-react'
+export { TrendingUp } from 'lucide-react'
+export { TrendingDown } from 'lucide-react'
+export { Tag } from 'lucide-react'
+export { DollarSign } from 'lucide-react'
+export { ArrowRight } from 'lucide-react'
+export { Filter } from 'lucide-react'
+export { ExternalLink } from 'lucide-react'
+export { Sparkles } from 'lucide-react'

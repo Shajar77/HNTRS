@@ -160,3 +160,86 @@ canvas {
         transition-duration: 0.001ms !important;
     }
 }
+
+/* ─── Entrance Animations (CSS-only, replaces Framer Motion) ─── */
+@keyframes entrance-text-slide {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
+}
+
+@keyframes entrance-dot-pop {
+    0%   { transform: scale(0); }
+    70%  { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
+
+.entrance-text-slide {
+    animation: entrance-text-slide 0.8s cubic-bezier(0.76, 0, 0.24, 1) 0.2s both;
+}
+
+.entrance-dot-pop {
+    animation: entrance-dot-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s both;
+}
+
+/* ─── Hero Section CSS Animations (replaces motion.div initial/animate) ─── */
+@keyframes hero-fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hero-scale-in {
+    from { opacity: 0; transform: scale(0.95); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes hero-fade-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes spin-slow {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+@keyframes spin-slow-reverse {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(-360deg); }
+}
+
+.hero-fade-up {
+    animation: hero-fade-up 0.8s var(--ease-expo) both;
+}
+
+.hero-scale-in {
+    animation: hero-scale-in 0.8s var(--ease-expo) 0.2s both;
+}
+
+.hero-fade-in-delayed {
+    animation: hero-fade-in 0.6s ease 1s both;
+}
+
+.spin-slow-30 {
+    animation: spin-slow 30s linear infinite;
+}
+
+.spin-slow-reverse-25 {
+    animation: spin-slow-reverse 25s linear infinite;
+}
+
+/* ─── Hover micro-interactions (CSS-only, replaces whileHover/whileTap) ─── */
+.btn-hover-scale {
+    transition: transform 0.15s ease;
+}
+.btn-hover-scale:hover {
+    transform: scale(1.02);
+}
+.btn-hover-scale:active {
+    transform: scale(0.98);
+}
+
+/* ─── Mobile menu slide (replaces Framer Motion menuVariants) ─── */
+@keyframes mobile-menu-slide {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(0); }
+}

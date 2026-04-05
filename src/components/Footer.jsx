@@ -16,35 +16,8 @@ const Footer = () => {
                 HNTRS
             </div>
 
-            {/* CTA Section */}
-            <div className='relative z-10 px-8 sm:px-12 md:px-20 lg:px-28 pt-28 sm:pt-36 md:pt-44 pb-20 sm:pb-28 border-b border-white/5'>
-                <div className='flex flex-col lg:flex-row lg:items-end justify-between gap-12 lg:gap-20'>
-                    <div>
-                        <p className='font-gs text-[10px] sm:text-xs text-[#DE5127] font-bold tracking-[0.5em] uppercase mb-6 flex items-center gap-3'>
-                            <span className='w-8 h-px bg-[#DE5127]'></span>
-                            Let's work together
-                        </p>
-                        <h2 className='font-2 text-[12vw] sm:text-[10vw] md:text-[8vw] lg:text-[6vw] text-white leading-[0.85] tracking-tighter'>
-                            READY TO<br />
-                            <span className='text-[#DE5127]'>HUNT?</span>
-                        </h2>
-                    </div>
-                    <Link to="/contact" className='group shrink-0 mb-2'>
-                        <div className='relative bg-[#DE5127] text-white rounded-full px-10 sm:px-14 py-5 sm:py-6 overflow-hidden'>
-                            <span className='absolute inset-0 bg-white translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-expo'></span>
-                            <span className='relative z-10 font-gs text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] group-hover:text-[#DE5127] transition-colors duration-500 flex items-center gap-3'>
-                                Start a Project
-                                <svg className='w-4 h-4 group-hover:translate-x-1 transition-transform duration-300' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='2'>
-                                    <path strokeLinecap='round' strokeLinejoin='round' d='M17 8l4 4m0 0l-4 4m4-4H3' />
-                                </svg>
-                            </span>
-                        </div>
-                    </Link>
-                </div>
-            </div>
-
             {/* Links Grid */}
-            <div className='relative z-10 px-8 sm:px-12 md:px-20 lg:px-28 py-20 sm:py-28'>
+            <div className='relative z-10 px-8 sm:px-12 md:px-20 lg:px-28 py-20 sm:py-28 border-t border-white/5'>
                 <div className='grid grid-cols-2 md:grid-cols-4 gap-12 lg:gap-16'>
                     {/* Navigation */}
                     <div>

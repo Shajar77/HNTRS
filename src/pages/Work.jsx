@@ -1,251 +1,198 @@
 import { Link } from 'react-router-dom'
-import { useRef, useCallback, useEffect, useState } from 'react'
+import { motion } from 'motion/react'
 
-const projects = [
+const collections = [
     {
-        title: "Topps & Borussia Dortmund",
-        category: "Brand",
-        tags: ["Content", "Product"],
-        image: "https://cdn.prod.website-files.com/6766a97af7951c214f154267/679cc558eb3dc6e7bb06e52f_9a031345e747b405445bdbb16e748d93_Topps%20Teamset%20BVB%20Thumbnail%202.avif",
-        year: "2024"
+        id: '01',
+        title: 'Premier',
+        subtitle: 'Premier League Legends',
+        description: 'Own iconic moments from the greatest football league. Limited edition NFTs featuring legendary goals and match-winning performances.',
+        image: 'https://images.unsplash.com/photo-1522778119026-d647f0565c6a?w=1200&q=80',
+        supply: '500',
+        price: '50 MATIC',
+        tags: ['Football', 'Limited']
     },
     {
-        title: "TOTO Dutch Darts Masters",
-        category: "Visuals",
-        tags: ["Campaign"],
-        image: "https://cdn.prod.website-files.com/6766a97af7951c214f154267/67acf80cb39c5d65b61e696b_TOTO%20Dutch%20Darts%20Masters%20Thumbnail%205.avif",
-        year: "2024"
+        id: '02',
+        title: 'Hoops',
+        subtitle: 'NBA Moments',
+        description: 'Basketball history on the blockchain. From slam dunks to buzzer beaters, collect the most electrifying NBA moments.',
+        image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200&q=80',
+        supply: '750',
+        price: '75 MATIC',
+        tags: ['Basketball', 'Rare']
     },
     {
-        title: "Manchester United Hall of Heroes",
-        category: "Content",
-        tags: ["Motion"],
-        image: "https://cdn.prod.website-files.com/6776815c172cb3537fafa18b/67d1c6a36ee550c98bfe0b71_TOPPS-MUFC-HALLOFHEROES-THUMB.jpg",
-        year: "2025"
+        id: '03',
+        title: 'Cricket',
+        subtitle: 'Cricket Icons',
+        description: "The gentleman's game meets digital collectibles. Centuries, wickets, and unforgettable moments from worldwide cricket.",
+        image: 'https://images.unsplash.com/photo-1531415074968-036ba1b575da?w=1200&q=80',
+        supply: '300',
+        price: '40 MATIC',
+        tags: ['Cricket', 'Premium']
     },
     {
-        title: "Derbby Campaign",
-        category: "Campaign",
-        tags: ["Visuals", "Digital"],
-        image: "/ball.webp",
-        year: "2025"
+        id: '04',
+        title: 'Courts',
+        subtitle: 'Grand Slam Series',
+        description: 'Grand Slam champions and historic match points. Collect NFTs celebrating the elegance of professional tennis.',
+        image: 'https://images.unsplash.com/photo-1622163642998-1ea38b1ade5b?w=1200&q=80',
+        supply: '400',
+        price: '45 MATIC',
+        tags: ['Tennis', 'Champions']
     }
-];
+]
 
 const Work = () => {
-    const spotRef = useRef(null)
-    const sectionRef = useRef(null)
-    const rectRef = useRef(null)
-    const rafRef = useRef(null)
-    const pointRef = useRef({ x: 0, y: 0 })
-    const [isInteractive, setIsInteractive] = useState(false)
-
-    useEffect(() => {
-        const pointerMedia = window.matchMedia('(pointer: fine)')
-        const reduceMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-        const updateEnabled = () => {
-            setIsInteractive(pointerMedia.matches && !reduceMotionMedia.matches)
-        }
-
-        updateEnabled()
-        pointerMedia.addEventListener('change', updateEnabled)
-        reduceMotionMedia.addEventListener('change', updateEnabled)
-
-        return () => {
-            pointerMedia.removeEventListener('change', updateEnabled)
-            reduceMotionMedia.removeEventListener('change', updateEnabled)
-        }
-    }, [])
-
-    useEffect(() => {
-        return () => {
-            if (rafRef.current) cancelAnimationFrame(rafRef.current)
-        }
-    }, [])
-
-    const updateRect = useCallback(() => {
-        if (!sectionRef.current) return
-        rectRef.current = sectionRef.current.getBoundingClientRect()
-    }, [])
-
-    useEffect(() => {
-        if (!isInteractive) return
-        updateRect()
-        window.addEventListener('resize', updateRect, { passive: true })
-        window.addEventListener('scroll', updateRect, { passive: true })
-        return () => {
-            window.removeEventListener('resize', updateRect)
-            window.removeEventListener('scroll', updateRect)
-        }
-    }, [isInteractive, updateRect])
-
-    const applyTransform = useCallback(() => {
-        rafRef.current = null
-        if (!spotRef.current || !rectRef.current) return
-        const x = pointRef.current.x - rectRef.current.left - 100
-        const y = pointRef.current.y - rectRef.current.top - 100
-        spotRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`
-    }, [])
-
-    const handlePointerMove = useCallback((e) => {
-        if (!isInteractive) return
-        pointRef.current = { x: e.clientX, y: e.clientY }
-        if (rafRef.current) return
-        rafRef.current = requestAnimationFrame(applyTransform)
-    }, [applyTransform, isInteractive])
-
-    const handlePointerEnter = useCallback(() => {
-        if (!isInteractive) return
-        updateRect()
-    }, [isInteractive, updateRect])
-
-    const handlePointerLeave = useCallback(() => {
-        if (!spotRef.current) return
-        spotRef.current.style.transform = 'translate3d(calc(50vw - 100px), calc(40vh - 100px), 0)'
-    }, [])
-
     return (
-        <div className='bg-[#F1F1F1] min-h-screen relative overflow-hidden'>
-
-            {/* Hero Section */}
-            <section
-                className='relative min-h-[70vh] sm:min-h-[80vh] overflow-hidden'
-                ref={sectionRef}
-                onPointerMove={handlePointerMove}
-                onPointerEnter={handlePointerEnter}
-                onPointerLeave={handlePointerLeave}
-            >
-                {/* Background grid */}
-                <div className='absolute inset-0 pointer-events-none opacity-[0.15]'
-                    style={{ backgroundImage: 'linear-gradient(rgba(0,0,0,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.3) 1px, transparent 1px)', backgroundSize: '120px 120px' }}
-                ></div>
-
-                {/* Mouse-following glow */}
-                <div className='absolute inset-0 pointer-events-none overflow-hidden'>
-                    <div
-                        ref={spotRef}
-                        className='absolute transition-transform duration-500 ease-out'
-                        style={{ top: 0, left: 0, transform: 'translate3d(calc(50vw - 100px), calc(40vh - 100px), 0)', willChange: 'transform' }}
+        <div className='min-h-screen bg-[#F1F1F1]'>
+            {/* Hero */}
+            <section className='px-8 sm:px-12 md:px-20 lg:px-28 py-20 sm:py-28 lg:py-36 border-b border-black/5'>
+                <div className='max-w-7xl mx-auto'>
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
                     >
-                        <div className='w-[200px] h-[200px] rounded-full border border-[#DE5127]/20 flex items-center justify-center'>
-                            <div className='w-[120px] h-[120px] rounded-full'
-                                style={{ background: 'radial-gradient(circle, rgba(222,81,39,0.25) 0%, rgba(222,81,39,0.08) 50%, transparent 70%)' }}
-                            ></div>
+                        <div className='flex items-center gap-3 mb-8'>
+                            <span className='w-12 h-[2px] bg-[#DE5127]'></span>
+                            <span className='font-gs text-[10px] text-[#DE5127] font-bold tracking-[0.4em] uppercase'>Collections</span>
                         </div>
-                    </div>
-                </div>
-
-                {/* Hero content */}
-                <div className='relative z-10 flex flex-col justify-end min-h-[70vh] sm:min-h-[80vh] px-8 sm:px-12 md:px-20 lg:px-28 pb-16 sm:pb-20 pt-32 sm:pt-40'>
-                    {/* Top label */}
-                    <div className='absolute top-32 sm:top-40 right-8 sm:right-12 md:right-20 lg:right-28'>
-                        <div className='flex items-center gap-3'>
-                            <span className='w-10 h-px bg-[#DE5127]'></span>
-                            <span className='font-gs text-[9px] sm:text-[10px] text-[#DE5127] font-bold tracking-[0.5em] uppercase'>Portfolio</span>
-                        </div>
-                    </div>
-
-                    {/* Title */}
-                    <div className='mb-8'>
-                        <p className='font-gs text-[8px] sm:text-[10px] font-bold uppercase tracking-[0.6em] text-black/25 mb-6'>
-                            Selected Works
-                        </p>
-                        <div className='flex items-center'>
-                            <h1 className='font-2 text-[18vw] sm:text-[16vw] md:text-[14vw] lg:text-[12vw] xl:text-[10vw] text-black leading-[0.82] tracking-tighter'>
-                                WORK
+                        
+                        <div className='flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16'>
+                            <h1 className='font-2 text-[15vw] sm:text-[12vw] lg:text-[10vw] text-black leading-[0.85] tracking-tighter'>
+                                NFT<br />
+                                <span className='text-[#DE5127]'>DROPS</span>
                             </h1>
-                            <div className='w-5 h-5 sm:w-7 sm:h-7 md:w-9 md:h-9 rounded-full bg-[#DE5127] flex items-center justify-center shadow-lg shadow-[#DE5127]/20 ml-2 sm:ml-3 md:ml-4'>
-                                <span className='font-2 text-white text-[7px] sm:text-[9px] md:text-xs'>R</span>
+                            <p className='font-gs text-black/40 text-base lg:text-lg max-w-sm lg:pb-4'>
+                                Exclusive sports NFT collections minted on Polygon. Own a piece of sporting history.
+                            </p>
+                        </div>
+
+                        {/* Stats */}
+                        <div className='flex flex-wrap gap-12 sm:gap-16 pt-8 border-t border-black/10'>
+                            <div>
+                                <p className='font-2 text-4xl sm:text-5xl text-black'>04</p>
+                                <p className='font-gs text-[10px] text-black/40 uppercase tracking-[0.2em] mt-1'>Collections</p>
+                            </div>
+                            <div>
+                                <p className='font-2 text-4xl sm:text-5xl text-black'>1950</p>
+                                <p className='font-gs text-[10px] text-black/40 uppercase tracking-[0.2em] mt-1'>Total NFTs</p>
+                            </div>
+                            <div>
+                                <p className='font-2 text-4xl sm:text-5xl text-[#DE5127]'>40+</p>
+                                <p className='font-gs text-[10px] text-black/40 uppercase tracking-[0.2em] mt-1'>MATIC Floor</p>
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
+                </div>
+            </section>
 
-                    {/* Tagline + count */}
-                    <div className='flex flex-col sm:flex-row sm:items-end justify-between gap-6'>
-                        <div className='flex items-center gap-4'>
-                            <span className='font-gs text-[9px] sm:text-[11px] font-bold uppercase tracking-[0.5em] text-black/20'>Sports</span>
-                            <span className='w-6 sm:w-10 h-px bg-[#DE5127]/40'></span>
-                            <span className='font-7 italic text-[#DE5127] text-base sm:text-xl md:text-2xl tracking-tight'>Exclusive</span>
-                        </div>
-                        <span className='font-8 text-6xl sm:text-7xl text-black/[0.06] leading-none'>04</span>
+            {/* Collections Grid */}
+            <section className='px-8 sm:px-12 md:px-20 lg:px-28 py-16 sm:py-24'>
+                <div className='max-w-7xl mx-auto'>
+                    <div className='grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12'>
+                        {collections.map((collection, index) => (
+                            <motion.article
+                                key={collection.id}
+                                initial={{ opacity: 0, y: 40 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                                className={`group relative ${index === 0 || index === 3 ? 'lg:translate-y-12' : ''}`}
+                            >
+                                {/* Image */}
+                                <div className='relative aspect-[4/5] overflow-hidden bg-black mb-6'>
+                                    <img
+                                        src={collection.image}
+                                        alt={collection.title}
+                                        loading="lazy"
+                                        className='w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700'
+                                    />
+                                    <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent' />
+                                    
+                                    {/* Number */}
+                                    <div className='absolute top-6 left-6'>
+                                        <span className='font-2 text-7xl sm:text-8xl text-white/20'>{collection.id}</span>
+                                    </div>
+
+                                    {/* Hover overlay */}
+                                    <div className='absolute inset-0 bg-[#DE5127]/0 group-hover:bg-[#DE5127]/10 transition-colors duration-500' />
+
+                                    {/* CTA */}
+                                    <Link to="/marketplace">
+                                        <div className='absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500'>
+                                            <div className='bg-white text-black px-6 py-3 font-gs text-[10px] font-bold uppercase tracking-[0.2em] flex items-center gap-2 hover:bg-[#DE5127] hover:text-white transition-colors'>
+                                                View Collection
+                                                <svg className='w-4 h-4' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 8l4 4m0 0l-4 4m4-4H3' />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </Link>
+                                </div>
+
+                                {/* Content */}
+                                <div className='flex justify-between items-start'>
+                                    <div>
+                                        <div className='flex items-center gap-2 mb-2'>
+                                            {collection.tags.map((tag, i) => (
+                                                <span key={tag} className='font-gs text-[9px] text-[#DE5127] font-bold uppercase tracking-[0.15em]'>
+                                                    {tag}
+                                                    {i < collection.tags.length - 1 && <span className='text-black/20 ml-2'>/</span>}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <h3 className='font-2 text-3xl sm:text-4xl text-black mb-1 group-hover:text-[#DE5127] transition-colors'>
+                                            {collection.title}
+                                        </h3>
+                                        <p className='font-gs text-sm text-black/50 mb-3'>{collection.subtitle}</p>
+                                        <p className='font-gs text-sm text-black/40 leading-relaxed max-w-sm'>
+                                            {collection.description}
+                                        </p>
+                                    </div>
+                                    
+                                    <div className='text-right'>
+                                        <p className='font-2 text-xl text-black'>{collection.price}</p>
+                                        <p className='font-gs text-[10px] text-black/30 uppercase tracking-[0.1em]'>{collection.supply} items</p>
+                                    </div>
+                                </div>
+                            </motion.article>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* Projects Grid */}
-            <section className='px-8 sm:px-12 md:px-20 lg:px-28 py-20 sm:py-28 relative z-10' style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 1200px' }}>
-
-                {/* Filter bar */}
-                <div className='flex flex-wrap items-center gap-3 mb-16 sm:mb-20'>
-                    {['All', 'Brand', 'Campaign', 'Content', 'Motion', 'Visuals'].map((filter, i) => (
-                        <button key={filter} className={`font-gs text-[10px] font-bold tracking-[0.2em] uppercase rounded-full px-5 py-2.5 border transition-all duration-300 ${i === 0 ? 'bg-black text-white border-black' : 'bg-transparent text-black/40 border-black/10 hover:border-[#DE5127] hover:text-[#DE5127]'}`}>
-                            {filter}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Grid */}
-                <div className='grid grid-cols-1 md:grid-cols-2 gap-x-10 lg:gap-x-16 gap-y-20 lg:gap-y-28'>
-                    {projects.map((project, i) => (
-                        <article
-                            key={i}
-                            className={`group cursor-pointer ${i % 3 === 1 ? 'md:mt-16' : ''} ${project.title.toLowerCase().includes('derbby') ? 'hidden xl:block' : ''}`}
-                        >
-                            {/* Image */}
-                            <div className='relative overflow-hidden rounded-2xl sm:rounded-3xl aspect-[4/3] mb-8'>
-                                <img
-                                    src={project.image}
-                                    alt={project.title}
-                                    loading="lazy"
-                                    decoding="async"
-                                    width="800"
-                                    height="600"
-                                    className='w-full h-full object-cover scale-105 group-hover:scale-100 transition-transform duration-[2s] ease-expo'
-                                />
-                                {/* Gradient overlay */}
-                                <div className='absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700' />
-
-                                {/* Hover arrow */}
-                                <div className='absolute top-6 right-6'>
-                                    <div className='w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/0 border border-white/0 group-hover:bg-white group-hover:border-white flex items-center justify-center transition-all duration-500 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100'>
-                                        <svg className='w-4 h-4 text-black -rotate-45' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='2'>
-                                            <path strokeLinecap='round' strokeLinejoin='round' d='M17 8l4 4m0 0l-4 4m4-4H3' />
-                                        </svg>
-                                    </div>
-                                </div>
-
-                                {/* Year badge */}
-                                <div className='absolute bottom-6 left-6'>
-                                    <span className='font-gs text-[9px] font-bold tracking-[0.2em] uppercase text-white bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 border border-white/10'>
-                                        {project.year}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Content */}
-                            <div className='flex justify-between items-start gap-4 px-1'>
-                                <div>
-                                    {/* Tags */}
-                                    <div className='flex flex-wrap items-center gap-2 mb-4'>
-                                        <span className='font-gs text-[9px] font-bold tracking-[0.2em] uppercase text-[#DE5127]'>{project.category}</span>
-                                        {project.tags.map((tag) => (
-                                            <span key={tag} className='font-gs text-[9px] font-bold tracking-[0.2em] uppercase text-black/25 before:content-["/"] before:mr-2 before:text-black/10'>{tag}</span>
-                                        ))}
-                                    </div>
-                                    {/* Title */}
-                                    <h3 className='font-gs text-lg sm:text-xl md:text-2xl font-bold uppercase tracking-tight leading-[1.1] group-hover:text-[#DE5127] transition-colors duration-500'>
-                                        {project.title}
-                                    </h3>
-                                </div>
-                                {/* Number */}
-                                <span className='font-8 text-3xl sm:text-4xl text-black/[0.06] leading-none shrink-0'>0{i + 1}</span>
-                            </div>
-                        </article>
-                    ))}
-                </div>
+            {/* CTA */}
+            <section className='px-8 sm:px-12 md:px-20 lg:px-28 py-20 sm:py-28 bg-black'>
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className='max-w-4xl mx-auto text-center'
+                >
+                    <p className='font-gs text-[10px] text-[#DE5127] font-bold tracking-[0.5em] uppercase mb-6'>Start Hunting</p>
+                    <h2 className='font-2 text-[10vw] sm:text-[8vw] lg:text-[5vw] text-white leading-[0.9] tracking-tighter mb-8'>
+                        Ready to Collect?
+                    </h2>
+                    <div className='flex flex-col sm:flex-row justify-center gap-4'>
+                        <Link to="/marketplace">
+                            <button className='group font-gs bg-[#DE5127] text-white px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] flex items-center gap-3 hover:bg-white hover:text-black transition-colors duration-300'>
+                                Browse All
+                                <svg className='w-4 h-4 group-hover:translate-x-1 transition-transform' fill='none' viewBox='0 0 24 24' stroke='currentColor'>
+                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth={2} d='M17 8l4 4m0 0l-4 4m4-4H3' />
+                                </svg>
+                            </button>
+                        </Link>
+                        <Link to="/mint">
+                            <button className='font-gs border border-white/20 text-white px-10 py-4 text-[11px] font-bold uppercase tracking-[0.3em] hover:border-[#DE5127] hover:text-[#DE5127] transition-colors duration-300'>
+                                Mint Yours
+                            </button>
+                        </Link>
+                    </div>
+                </motion.div>
             </section>
-
         </div>
     )
 }

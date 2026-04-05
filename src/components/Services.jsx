@@ -9,17 +9,43 @@ const Services = () => {
                         SERVICES
                     </p>
                     <p className='font-gs text-xs font-black tracking-[0.5em] uppercase text-[#DE5127] mb-4 text-center xl:text-right'>
-                        What we do best
+                        What HNTRS Offers
                     </p>
                 </div>
                 <div className='w-full h-px bg-black/10 mt-12' />
             </div>
 
             <div className='flex flex-col'>
-                <Boxes number="01" title="Brand" description="Look core Elements" text="We create engaging brand and campaign identities that resonate with your target audience, from logo design to complete brand experience." image="https://cdn.prod.website-files.com/6766a97af7951c214f154267/67acf80cb39c5d65b61e696b_TOTO%20Dutch%20Darts%20Masters%20Thumbnail%205.avif" />
-                <Boxes number="02" title="Visuals" description="Key visuals Campaign" text="We craft your campaign's creative identity—key visuals, messaging, and adaptable designs across all touchpoints. From partnerships to events, we connect fans, brands, and unforgettable moments." image="https://cdn.prod.website-files.com/6766a97af7951c214f154267/67bb183bde30948f369ea54c_CAMPAIGN%20THUMBNAIL.avif" reversed={true} />
-                <Boxes number="03" title="Content" description="Out of Home Motion" text="We create tailored content for every stage of your strategy, from awareness visuals to engaging social media assets. Think videos, motion graphics, and impactful designs that inspire and drive action." image="https://cdn.prod.website-files.com/6776815c172cb3537fafa18b/67d1c6a36ee550c98bfe0b71_TOPPS-MUFC-HALLOFHEROES-THUMB.jpg" />
-                <Boxes number="04" title="Product" description="Printables &amp; Packaging" text="We craft innovative products that merge design and functionality, delivering tangible solutions that elevate your brand and connect with your audience." image="https://cdn.prod.website-files.com/6766a97af7951c214f154267/679cc558eb3dc6e7bb06e52f_9a031345e747b405445bdbb16e748d93_Topps%20Teamset%20BVB%20Thumbnail%202.avif" reversed={true} />
+                <Boxes 
+                    number="01" 
+                    title="Mint" 
+                    description="Create Sports NFTs" 
+                    text="Transform your sports moments into unique digital collectibles. Upload artwork, set metadata, configure royalties, and mint directly on Polygon blockchain with minimal gas fees." 
+                    image="/images/mint-nft.jpg" 
+                />
+                <Boxes 
+                    number="02" 
+                    title="Trade" 
+                    description="Buy & Sell NFTs" 
+                    text="Access a decentralized marketplace for sports NFTs. List with fixed price or auction formats, browse collections by sport, and discover rare digital memorabilia from athletes worldwide." 
+                    image="/images/trade-nft.jpg" 
+                    reversed={true} 
+                />
+                <Boxes 
+                    number="03" 
+                    title="Collect" 
+                    description="Build Your Collection" 
+                    text="Curate your personal sports NFT gallery. Track your assets, showcase rare finds, and connect with a community of collectors who share your passion for sports and digital art." 
+                    image="/images/collect-nft.jpg" 
+                />
+                <Boxes 
+                    number="04" 
+                    title="Earn" 
+                    description="Royalties & Rewards" 
+                    text="Creators earn from every secondary sale through customizable royalty settings. Build passive income streams while fans trade your sports moments in the marketplace forever." 
+                    image="/images/earn-nft.jpg" 
+                    reversed={true} 
+                />
             </div>
         </div>
     )

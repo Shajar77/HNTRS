@@ -1,164 +1,227 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { useState, useEffect, lazy, Suspense } from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import { ChevronDown } from '../lib/icons'
 
-const navItems = [
+// Lazy-load WalletConnect — it's heavy (wagmi hooks)
+const WalletConnect = lazy(() => import('./WalletConnect'))
+const WalletFallback = () => (
+    <button className='btn-hover-scale px-5 py-2.5 bg-black text-white font-gs font-bold text-[11px] uppercase tracking-[0.2em]'>
+        Connect Wallet
+    </button>
+)
+
+const mainNavItems = [
     { name: 'Home', path: '/' },
-    { name: 'Work', path: '/work' },
+    { name: 'Collect', path: '/collect' },
+    { name: 'NFT', path: '/marketplace', hasDropdown: true },
     { name: 'News', path: '/news' },
     { name: 'Contact', path: '/contact' }
 ];
 
-const menuVariants = {
-    closed: { x: '100%' },
-    open: {
-        x: 0,
-        transition: { type: 'spring', damping: 25, stiffness: 200 }
-    }
-};
+const web3NavItems = [
+    { name: 'Mint', path: '/mint' },
+    { name: 'Marketplace', path: '/marketplace' },
+    { name: 'Profile', path: '/profile' }
+];
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isWeb3Open, setIsWeb3Open] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
-    const isDark = ['/news'].includes(location.pathname);
-    const textColor = isDark ? 'text-white' : 'text-black';
-    const borderColor = isDark ? 'border-white/20' : 'border-black/20';
+    const isDark = ['/news', '/collect'].includes(location.pathname);
+    const linkColor = isDark ? 'text-[#DE5127]' : 'text-black';
+    const linkColorInactive = isDark ? 'text-white/50 hover:text-[#DE5127]' : 'text-black/40 hover:text-black';
+    const isWeb3Active = web3NavItems.some(item => location.pathname === item.path);
+
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 50);
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    // Close menu on route change
+    useEffect(() => {
+        setIsMenuOpen(false);
+        setIsWeb3Open(false);
+    }, [location.pathname]);
 
     return (
         <>
-            {/* Desktop Navigation */}
-            <nav className="hidden xl:flex absolute top-0 left-0 right-0 z-50 px-16 py-8 bg-transparent">
-                <div className="flex justify-between items-center w-full">
-                    <div className="flex items-center gap-16 font-gs">
-                        {navItems.map((item, i) => (
-                            <Link
-                                key={item.name}
-                                to={item.path}
-                                className={`text-xs font-bold uppercase tracking-[0.5em] relative group transition-all duration-500 ${location.pathname === item.path
-                                    ? 'text-[#DE5127]'
-                                    : `${textColor} hover:text-[#DE5127]`
-                                    }`}
-                            >
-                                <span className="mr-2 opacity-20 group-hover:opacity-100 transition-opacity">0{i + 1}</span>
-                                {item.name}
-                            </Link>
-                        ))}
-                    </div>
-
-                    <Link to="/contact" className="relative group">
-                        <div className={`px-6 py-2.5 rounded-full transition-all duration-700 border flex items-center gap-2 bg-white/5 backdrop-blur-md ${textColor} ${borderColor} hover:bg-[#DE5127] hover:text-white hover:border-[#DE5127]`}>
-                            <span className='font-gs relative z-10 text-[10px] font-bold uppercase tracking-[0.25em]'>
-                                Start a Project
-                            </span>
-                            <div className="relative z-10 w-1.5 h-1.5 rounded-full bg-[#DE5127] group-hover:bg-white transition-colors duration-500" />
-                        </div>
+            {/* Desktop */}
+            <nav className={`hidden lg:flex fixed top-0 left-0 right-0 z-50 px-12 py-6 transition-all duration-300 ${scrolled ? isDark ? 'bg-black/60 backdrop-blur-xl border-b border-white/[0.08]' : 'bg-white/70 backdrop-blur-xl border-b border-black/[0.08]' : ''}`}>
+                <div className="flex items-center justify-between w-full max-w-[1800px] mx-auto">
+                    {/* Left - Logo */}
+                    <Link to="/" className="group flex items-center gap-3">
+                        <span className={`font-2 text-2xl font-bold tracking-tight transition-colors duration-300 ${isDark ? 'text-white' : 'text-black'} group-hover:text-[#DE5127]`}>HNTRS</span>
+                        <span className="w-2 h-2 bg-[#DE5127] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </Link>
-                </div>
-            </nav>
 
-            {/* Tablet Navigation */}
-            <nav className="hidden md:flex xl:hidden absolute top-0 left-0 right-0 z-50 justify-center px-10 py-6 bg-transparent">
-                <div className="flex justify-between items-center w-full max-w-7xl mx-auto">
-                    <div className="flex items-center gap-10 font-gs">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.name}
-                                to={item.path}
-                                className={`text-[10px] font-bold uppercase tracking-[0.4em] transition-all duration-500 ${location.pathname === item.path
-                                    ? 'text-[#DE5127]'
-                                    : `${textColor} hover:text-[#DE5127]`
-                                    }`}
-                            >
-                                {item.name}
-                            </Link>
-                        ))}
-                    </div>
-
-                    <Link to="/contact" className="relative group">
-                        <div className={`px-5 py-2 rounded-full transition-all duration-700 border flex items-center gap-2 overflow-hidden bg-white/5 backdrop-blur-md ${textColor} ${borderColor} hover:bg-[#DE5127] hover:text-white hover:border-[#DE5127]`}>
-                            <span className='font-gs relative z-10 text-[9px] font-bold uppercase tracking-[0.2em]'>
-                                Start a Project
-                            </span>
-                            <div className="relative z-10 w-1 h-1 rounded-full bg-[#DE5127] group-hover:bg-white transition-colors duration-500" />
-                        </div>
-                    </Link>
-                </div>
-            </nav>
-
-            {/* Mobile Hamburger */}
-            <div className="md:hidden absolute top-8 right-8 z-50">
-                <button
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                    className={`flex flex-col gap-2 p-5 rounded-full transition-all duration-500 ${isMenuOpen ? 'bg-white shadow-2xl' : isDark ? 'bg-white/10 backdrop-blur-md' : 'bg-white/10 backdrop-blur-md'}`}
-                    aria-label="Toggle menu"
-                >
-                    <span className={`block w-6 h-0.5 transition-all duration-500 ease-expo ${isMenuOpen ? 'bg-black rotate-45 translate-y-2.5' : isDark ? 'bg-white' : 'bg-black'}`} />
-                    <span className={`block w-4 h-0.5 self-end transition-all duration-500 ease-expo ${isMenuOpen ? 'bg-black opacity-0' : isDark ? 'bg-white' : 'bg-black'}`} />
-                    <span className={`block w-6 h-0.5 transition-all duration-500 ease-expo ${isMenuOpen ? 'bg-black -rotate-45 -translate-y-2.5' : isDark ? 'bg-white' : 'bg-black'}`} />
-                </button>
-            </div>
-
-            {/* Mobile Menu Overlay — keeping AnimatePresence for menu open/close only */}
-            <AnimatePresence>
-                {isMenuOpen && (
-                    <>
-                        <motion.div
-                            className="fixed inset-0 bg-black/40 z-40 md:hidden backdrop-blur-md"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onClick={() => setIsMenuOpen(false)}
-                        />
-                        <motion.div
-                            className="fixed top-0 right-0 h-full w-full sm:w-[400px] bg-white z-50 md:hidden shadow-2xl"
-                            variants={menuVariants}
-                            initial="closed"
-                            animate="open"
-                            exit="closed"
-                        >
-                            <div className="flex flex-col gap-10 p-8 sm:p-12 pt-28 sm:pt-36 font-gs">
-                                {navItems.map((item, i) => (
+                    {/* Right - Nav + Wallet */}
+                    <div className="flex items-center gap-8">
+                        {/* Nav Links */}
+                        <div className="flex items-center gap-8">
+                            {mainNavItems.map((item) => (
+                                item.hasDropdown ? (
+                                    <div key={item.name} className="relative" onMouseEnter={() => setIsWeb3Open(true)} onMouseLeave={() => setIsWeb3Open(false)}>
+                                        <button className={`relative flex items-center gap-1.5 text-[12px] font-gs font-bold uppercase tracking-[0.25em] transition-all duration-300 ${isWeb3Active || isWeb3Open ? 'text-[#DE5127]' : linkColorInactive}`}>
+                                            {item.name}
+                                            <div className={`transition-transform duration-200 ${isWeb3Open ? 'rotate-180' : ''}`}>
+                                                <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+                                            </div>
+                                            <span className={`absolute -bottom-1 left-0 h-[2px] bg-[#DE5127] transition-all duration-300 ${isWeb3Active ? 'w-full' : 'w-0'}`} />
+                                        </button>
+                                        {isWeb3Open && (
+                                            <div 
+                                                className="absolute top-full right-0 mt-3 w-48 bg-[#DE5127] border border-[#DE5127]/20 shadow-[0_20px_60px_-15px_rgba(222,81,39,0.4)] overflow-hidden z-50 animate-[hero-fade-up_0.2s_ease_both]"
+                                            >
+                                                <div className="p-2">
+                                                    {web3NavItems.map((subItem) => (
+                                                        <Link 
+                                                            key={subItem.name}
+                                                            to={subItem.path} 
+                                                            className={`block px-4 py-3 text-[11px] font-gs font-bold uppercase tracking-[0.15em] hover:bg-white/10 transition-colors ${location.pathname === subItem.path ? 'text-white bg-white/20' : 'text-white/90'}`}
+                                                        >
+                                                            {subItem.name}
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
                                     <Link
                                         key={item.name}
                                         to={item.path}
-                                        onClick={() => setIsMenuOpen(false)}
-                                        className={`text-4xl sm:text-6xl md:text-7xl font-bold uppercase tracking-tighter transition-all duration-500 flex items-center gap-6 group ${location.pathname === item.path
-                                            ? 'text-[#DE5127]'
-                                            : 'text-black hover:text-[#DE5127]'
-                                            }`}
+                                        className={`relative text-[12px] font-gs font-bold uppercase tracking-[0.25em] transition-all duration-300 ${location.pathname === item.path ? linkColor : linkColorInactive}`}
                                     >
-                                        <span className="text-xs opacity-20 group-hover:opacity-100 transition-opacity">0{i + 1}</span>
                                         {item.name}
+                                        <span className={`absolute -bottom-1 left-0 h-[2px] bg-[#DE5127] transition-all duration-300 ${location.pathname === item.path ? 'w-full' : 'w-0'}`} />
                                     </Link>
-                                ))}
+                                )
+                            ))}
+                        </div>
 
-                                {/* Mobile CTA */}
-                                <div className="mt-8">
-                                    <Link
-                                        to="/contact"
-                                        onClick={() => setIsMenuOpen(false)}
-                                        className="inline-flex items-center gap-4 bg-[#DE5127] text-white px-6 sm:px-10 py-4 sm:py-5 rounded-full text-base sm:text-xl font-black uppercase tracking-[0.3em] hover:bg-black transition-colors duration-500"
+                        {/* Divider */}
+                        <div className="w-px h-6 bg-black/10" />
+
+                        {/* Connect Wallet Button */}
+                        <Suspense fallback={<WalletFallback />}>
+                            <WalletConnect />
+                        </Suspense>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Tablet */}
+            <nav className="hidden md:flex lg:hidden fixed top-0 left-0 right-0 z-50 px-8 py-5 bg-white/90 backdrop-blur-md border-b border-black/[0.06]">
+                <div className="flex items-center justify-between w-full">
+                    <Link to="/" className="font-2 text-xl font-bold tracking-tight">HNTRS</Link>
+                    <div className="flex items-center gap-6">
+                        {mainNavItems.slice(0, 3).map((item) => (
+                            <Link key={item.name} to={item.path} className={`text-[11px] font-gs font-bold uppercase tracking-[0.2em] ${location.pathname === item.path ? 'text-black' : 'text-black/40'}`}>
+                                {item.name}
+                            </Link>
+                        ))}
+                        <button className="text-[11px] font-gs font-bold uppercase tracking-[0.2em] text-black/40">NFT</button>
+                        <div className="w-px h-5 bg-black/10" />
+                        <Suspense fallback={<WalletFallback />}>
+                            <WalletConnect />
+                        </Suspense>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Mobile */}
+            <nav className="md:hidden fixed top-0 left-0 right-0 z-50 px-5 py-4 bg-white/95 backdrop-blur-md border-b border-black/[0.06]">
+                <div className="flex items-center justify-between">
+                    <Link to="/" className="font-2 text-xl font-bold tracking-tight">HNTRS</Link>
+                    <div className="flex items-center gap-3">
+                        <Suspense fallback={<WalletFallback />}>
+                            <WalletConnect />
+                        </Suspense>
+                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 hover:bg-black/5 transition-colors rounded-md">
+                            <div className="w-5 space-y-1">
+                                <span className={`block h-0.5 w-full bg-black transition-all duration-300 ${isMenuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
+                                <span className={`block h-0.5 w-4 bg-black transition-all duration-300 ${isMenuOpen ? 'opacity-0' : ''}`} />
+                                <span className={`block h-0.5 w-full bg-black transition-all duration-300 ${isMenuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </nav>
+
+            {/* Mobile Menu — CSS-only slide (no framer motion) */}
+            {isMenuOpen && (
+                <>
+                    <div
+                        className="fixed inset-0 bg-black/60 z-40 md:hidden backdrop-blur-md animate-[hero-fade-in_0.2s_ease_both]"
+                        onClick={() => setIsMenuOpen(false)}
+                    />
+                    <div
+                        className="fixed top-0 right-0 h-full w-[85vw] max-w-[320px] bg-white z-50 md:hidden shadow-2xl"
+                        style={{ animation: 'mobile-menu-slide 0.4s cubic-bezier(0.22, 1, 0.36, 1) both' }}
+                    >
+                        <div className="flex flex-col h-full p-8 pt-24">
+                            {/* Main Nav */}
+                            <div className="space-y-1">
+                                {mainNavItems.map((item, i) => (
+                                    <div
+                                        key={item.name}
+                                        className="animate-[hero-fade-up_0.4s_ease_both]"
+                                        style={{ animationDelay: `${i * 100}ms` }}
                                     >
-                                        Start a Project <span>→</span>
-                                    </Link>
+                                        <Link
+                                            to={item.path}
+                                            onClick={() => setIsMenuOpen(false)}
+                                            className={`flex items-center justify-between py-4 text-2xl font-bold uppercase tracking-tight transition-all duration-300 border-b border-black/5 ${location.pathname === item.path ? 'text-[#DE5127]' : 'text-black hover:text-[#DE5127]'}`}
+                                        >
+                                            {item.name}
+                                            <span className="text-xs opacity-30">→</span>
+                                        </Link>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* NFT Section */}
+                            <div className="mt-8">
+                                <p className="font-gs text-[10px] uppercase tracking-[0.4em] text-[#DE5127] mb-4">NFT Platform</p>
+                                <div className="space-y-2">
+                                    {web3NavItems.map((item, i) => (
+                                        <div
+                                            key={item.name}
+                                            className="animate-[hero-fade-up_0.4s_ease_both]"
+                                            style={{ animationDelay: `${400 + i * 100}ms` }}
+                                        >
+                                            <Link
+                                                to={item.path}
+                                                onClick={() => setIsMenuOpen(false)}
+                                                className={`flex items-center gap-3 py-3 px-4 text-sm font-bold uppercase tracking-wider transition-all duration-300 ${location.pathname === item.path ? 'text-[#DE5127] bg-[#DE5127]/5' : 'text-black/60 hover:text-[#DE5127] hover:bg-black/[0.02]'}`}
+                                            >
+                                                <span className="w-1.5 h-1.5 bg-current" />
+                                                {item.name}
+                                            </Link>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
 
-                            {/* Mobile Menu Footer */}
-                            <div className="absolute bottom-10 left-8 right-8 sm:bottom-16 sm:left-16 sm:right-16 pt-10 border-t border-black/5">
-                                <div className="flex flex-col gap-6">
-                                    <p className="font-gs text-[10px] font-black uppercase tracking-[0.5em] text-black/20">© 2025 HNTRS® / Creative Studio</p>
-                                    <div className="flex flex-wrap gap-6">
-                                        {['Instagram', 'LinkedIn', 'Behance'].map(social => (
-                                            <span key={social} className="font-gs text-[10px] font-black uppercase tracking-widest text-black/40 hover:text-[#DE5127] cursor-pointer transition-colors">{social}</span>
-                                        ))}
-                                    </div>
-                                </div>
+                            <div className="mt-auto space-y-4">
+                                <Suspense fallback={<WalletFallback />}>
+                                    <WalletConnect onClose={() => setIsMenuOpen(false)} />
+                                </Suspense>
+                                <Link
+                                    to="/contact"
+                                    onClick={() => setIsMenuOpen(false)}
+                                    className="flex items-center justify-center gap-2 w-full bg-black text-white py-4 text-sm font-bold uppercase tracking-[0.2em] hover:bg-[#DE5127] transition-colors duration-300"
+                                >
+                                    Get in Touch <span>→</span>
+                                </Link>
                             </div>
-                        </motion.div>
-                    </>
-                )}
-            </AnimatePresence>
+                        </div>
+                    </div>
+                </>
+            )}
         </>
     );
 };

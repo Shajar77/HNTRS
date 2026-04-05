@@ -6,15 +6,20 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   build: {
-    target: 'esnext',
+    target: 'es2020',
     cssCodeSplit: true,
     reportCompressedSize: false,
+    // esbuild minification is default and fast — ensure it's not disabled
+    minify: 'esbuild',
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'router': ['react-router-dom'],
-          'motion': ['motion'],
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-router': ['react-router-dom'],
+          'vendor-web3': ['wagmi', 'viem', '@wagmi/core'],
+          'vendor-motion': ['motion'],
+          'vendor-query': ['@tanstack/react-query'],
         },
       },
     },

@@ -22,7 +22,7 @@ function Boxes(props) {
             </div>
 
             {/* Image Section */}
-            <div className='w-full xl:w-1/4 aspect-video overflow-hidden rounded-3xl shadow-xl'>
+            <div className='w-full xl:w-1/4 aspect-[4/3] overflow-hidden rounded-3xl shadow-xl bg-black/[0.03] flex items-center justify-center'>
                 <img
                     src={props.image}
                     alt={props.title}
@@ -30,7 +30,7 @@ function Boxes(props) {
                     decoding="async"
                     width="400"
                     height="225"
-                    className="w-full h-full object-cover grayscale-50 group-hover:grayscale-0 group-hover:scale-110 transition-all duration-1000"
+                    className="w-full h-full object-contain grayscale-50 group-hover:grayscale-0 group-hover:scale-105 transition-all duration-1000"
                 />
             </div>
         </div>

@@ -183,43 +183,69 @@ const Contact = () => {
                         </div>
 
                         {/* Form */}
-                        <form onSubmit={e => e.preventDefault()} className='space-y-6'>
+                        <form onSubmit={e => e.preventDefault()} className='space-y-8'>
                             {/* Row 1 — Name + Email */}
-                            <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
-                                <div className='flex flex-col gap-3'>
-                                    <label className='font-gs text-[9px] font-bold uppercase tracking-[0.2em] text-black/50 pl-1'>Name *</label>
-                                    <input type="text" required placeholder="John Doe" className='w-full bg-[#F5F5F5] hover:bg-[#F0F0F0] focus:bg-white text-black text-sm font-bold tracking-wide px-5 py-4 rounded-xl border border-transparent focus:border-[#DE5127]/30 outline-none placeholder:text-black/20 transition-all duration-300 font-gs caret-[#DE5127] shadow-sm' />
+                            <div className='grid grid-cols-1 sm:grid-cols-2 gap-8'>
+                                <div className='relative'>
+                                    <input 
+                                        type="text" 
+                                        required 
+                                        placeholder=" "
+                                        className='peer w-full bg-transparent text-black text-base font-medium px-0 py-4 border-b border-black/10 focus:border-[#DE5127] outline-none transition-colors duration-300 placeholder-transparent' 
+                                    />
+                                    <label className='absolute left-0 top-4 text-black/40 text-sm font-gs font-bold uppercase tracking-wider transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-[#DE5127] peer-valid:top-0 peer-valid:text-[10px]'>
+                                        Your Name *
+                                    </label>
                                 </div>
-                                <div className='flex flex-col gap-3'>
-                                    <label className='font-gs text-[9px] font-bold uppercase tracking-[0.2em] text-black/50 pl-1'>Email *</label>
-                                    <input type="email" required placeholder="hello@example.com" className='w-full bg-[#F5F5F5] hover:bg-[#F0F0F0] focus:bg-white text-black text-sm font-bold tracking-wide px-5 py-4 rounded-xl border border-transparent focus:border-[#DE5127]/30 outline-none placeholder:text-black/20 transition-all duration-300 font-gs caret-[#DE5127] shadow-sm' />
+                                <div className='relative'>
+                                    <input 
+                                        type="email" 
+                                        required 
+                                        placeholder=" "
+                                        className='peer w-full bg-transparent text-black text-base font-medium px-0 py-4 border-b border-black/10 focus:border-[#DE5127] outline-none transition-colors duration-300 placeholder-transparent' 
+                                    />
+                                    <label className='absolute left-0 top-4 text-black/40 text-sm font-gs font-bold uppercase tracking-wider transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-[#DE5127] peer-valid:top-0 peer-valid:text-[10px]'>
+                                        Email Address *
+                                    </label>
                                 </div>
                             </div>
 
                             {/* Row 2 — Company + Subject */}
-                            <div className='grid grid-cols-1 sm:grid-cols-2 gap-6'>
-                                <div className='flex flex-col gap-3'>
-                                    <label className='font-gs text-[9px] font-bold uppercase tracking-[0.2em] text-black/50 pl-1'>Company</label>
-                                    <input type="text" placeholder="ACME Inc." className='w-full bg-[#F5F5F5] hover:bg-[#F0F0F0] focus:bg-white text-black text-sm font-bold tracking-wide px-5 py-4 rounded-xl border border-transparent focus:border-[#DE5127]/30 outline-none placeholder:text-black/20 transition-all duration-300 font-gs caret-[#DE5127] shadow-sm' />
+                            <div className='grid grid-cols-1 sm:grid-cols-2 gap-8'>
+                                <div className='relative'>
+                                    <input 
+                                        type="text" 
+                                        placeholder=" "
+                                        className='peer w-full bg-transparent text-black text-base font-medium px-0 py-4 border-b border-black/10 focus:border-[#DE5127] outline-none transition-colors duration-300 placeholder-transparent' 
+                                    />
+                                    <label className='absolute left-0 top-4 text-black/40 text-sm font-gs font-bold uppercase tracking-wider transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-[#DE5127] peer-valid:top-0 peer-valid:text-[10px]'>
+                                        Company
+                                    </label>
                                 </div>
-                                <div className='flex flex-col gap-3'>
-                                    <label className='font-gs text-[9px] font-bold uppercase tracking-[0.2em] text-black/50 pl-1'>Subject</label>
-                                    <input type="text" placeholder="New project" className='w-full bg-[#F5F5F5] hover:bg-[#F0F0F0] focus:bg-white text-black text-sm font-bold tracking-wide px-5 py-4 rounded-xl border border-transparent focus:border-[#DE5127]/30 outline-none placeholder:text-black/20 transition-all duration-300 font-gs caret-[#DE5127] shadow-sm' />
+                                <div className='relative'>
+                                    <input 
+                                        type="text" 
+                                        placeholder=" "
+                                        className='peer w-full bg-transparent text-black text-base font-medium px-0 py-4 border-b border-black/10 focus:border-[#DE5127] outline-none transition-colors duration-300 placeholder-transparent' 
+                                    />
+                                    <label className='absolute left-0 top-4 text-black/40 text-sm font-gs font-bold uppercase tracking-wider transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-[#DE5127] peer-valid:top-0 peer-valid:text-[10px]'>
+                                        Subject
+                                    </label>
                                 </div>
                             </div>
 
                             {/* Services */}
-                            <div className='pt-2'>
-                                <label className='font-gs text-[9px] font-bold uppercase tracking-[0.2em] text-black/50 block mb-4 pl-1'>What do you need?</label>
-                                <div className='flex flex-wrap gap-2.5'>
+                            <div className='pt-4'>
+                                <label className='font-gs text-[10px] font-bold uppercase tracking-[0.2em] text-black/40 block mb-4'>What do you need?</label>
+                                <div className='flex flex-wrap gap-2'>
                                     {['Branding', 'Content', 'Motion', 'Product Design', 'Campaign', 'Social Media'].map((s, i) => (
                                         <button
                                             key={s}
                                             type="button"
                                             onClick={() => setActiveService(i)}
-                                            className={`font-gs text-[9px] font-bold tracking-[0.1em] uppercase rounded-full px-5 py-3 border transition-all duration-300 shadow-sm ${activeService === i
-                                                ? 'border-[#DE5127] text-white bg-[#DE5127] shadow-[0_8px_16px_-6px_rgba(222,81,39,0.4)]'
-                                                : 'border-black/5 text-black/60 bg-[#F5F5F5] hover:bg-[#EAEAEA] hover:text-black'
+                                            className={`font-gs text-[11px] font-medium tracking-wide px-4 py-2 rounded-lg border transition-all duration-200 ${activeService === i
+                                                ? 'border-[#DE5127] text-[#DE5127] bg-[#DE5127]/5'
+                                                : 'border-black/10 text-black/50 hover:border-black/20 hover:text-black/70'
                                                 }`}
                                         >
                                             {s}
@@ -229,17 +255,17 @@ const Contact = () => {
                             </div>
 
                             {/* Budget */}
-                            <div className='pt-2'>
-                                <label className='font-gs text-[9px] font-bold uppercase tracking-[0.2em] text-black/50 block mb-4 pl-1'>Budget Range</label>
-                                <div className='flex flex-wrap gap-2.5'>
+                            <div className='pt-4'>
+                                <label className='font-gs text-[10px] font-bold uppercase tracking-[0.2em] text-black/40 block mb-4'>Budget Range</label>
+                                <div className='flex flex-wrap gap-2'>
                                     {['< Rs. 1M', 'Rs. 1M – 5M', 'Rs. 5M – 10M', 'Rs. 10M+'].map((r, i) => (
                                         <button
                                             key={r}
                                             type="button"
                                             onClick={() => setActiveBudget(i)}
-                                            className={`font-gs text-[9px] font-bold tracking-[0.1em] uppercase rounded-full px-5 py-3 border transition-all duration-300 shadow-sm ${activeBudget === i
-                                                ? 'border-[#DE5127] text-white bg-[#DE5127] shadow-[0_8px_16px_-6px_rgba(222,81,39,0.4)]'
-                                                : 'border-black/5 text-black/60 bg-[#F5F5F5] hover:bg-[#EAEAEA] hover:text-black'
+                                            className={`font-gs text-[11px] font-medium tracking-wide px-4 py-2 rounded-lg border transition-all duration-200 ${activeBudget === i
+                                                ? 'border-[#DE5127] text-[#DE5127] bg-[#DE5127]/5'
+                                                : 'border-black/10 text-black/50 hover:border-black/20 hover:text-black/70'
                                                 }`}
                                         >
                                             {r}
@@ -249,23 +275,30 @@ const Contact = () => {
                             </div>
 
                             {/* Message */}
-                            <div className='flex flex-col gap-3 pt-2'>
-                                <label className='font-gs text-[9px] font-bold uppercase tracking-[0.2em] text-black/50 pl-1'>Message *</label>
-                                <textarea required rows="4" placeholder="Tell us about your project..." className='w-full bg-[#F5F5F5] hover:bg-[#F0F0F0] focus:bg-white text-black text-sm font-bold tracking-wide px-5 py-4 rounded-xl border border-transparent focus:border-[#DE5127]/30 outline-none placeholder:text-black/20 resize-none transition-all duration-300 font-gs caret-[#DE5127] shadow-sm'></textarea>
+                            <div className='relative pt-4'>
+                                <textarea 
+                                    required 
+                                    rows="3" 
+                                    placeholder=" "
+                                    className='peer w-full bg-transparent text-black text-base font-medium px-0 py-4 border-b border-black/10 focus:border-[#DE5127] outline-none transition-colors duration-300 placeholder-transparent resize-none'
+                                ></textarea>
+                                <label className='absolute left-0 top-4 text-black/40 text-sm font-gs font-bold uppercase tracking-wider transition-all duration-300 peer-placeholder-shown:top-4 peer-placeholder-shown:text-sm peer-focus:top-0 peer-focus:text-[10px] peer-focus:text-[#DE5127] peer-valid:top-0 peer-valid:text-[10px]'>
+                                    Tell us about your project *
+                                </label>
                             </div>
 
                             {/* Submit row */}
-                            <div className='flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pt-8 mt-4 border-t border-black/5'>
-                                <button type="submit" className='group/btn relative bg-[#DE5127] text-white rounded-full px-10 sm:px-14 py-4 sm:py-5 overflow-hidden shadow-[0_12px_24px_-8px_rgba(222,81,39,0.4)] hover:shadow-[0_16px_32px_-8px_rgba(222,81,39,0.5)] transition-shadow duration-500'>
-                                    <span className='absolute inset-0 bg-black translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500 ease-expo'></span>
-                                    <span className='relative z-10 font-gs text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em] text-white transition-colors duration-500 flex items-center gap-3'>
-                                        Send Message
-                                        <svg className='w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='2'>
-                                            <path strokeLinecap='round' strokeLinejoin='round' d='M17 8l4 4m0 0l-4 4m4-4H3' />
-                                        </svg>
-                                    </span>
+                            <div className='flex items-center justify-between gap-6 pt-6'>
+                                <button 
+                                    type="submit" 
+                                    className='group flex items-center gap-3 bg-[#DE5127] text-white rounded-lg px-8 py-4 hover:bg-[#c94520] transition-colors duration-300'
+                                >
+                                    <span className='font-gs text-[12px] font-bold uppercase tracking-wider'>Send Message</span>
+                                    <svg className='w-4 h-4 group-hover:translate-x-1 transition-transform duration-300' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth='2'>
+                                        <path strokeLinecap='round' strokeLinejoin='round' d='M17 8l4 4m0 0l-4 4m4-4H3' />
+                                    </svg>
                                 </button>
-                                <p className='font-gs text-[10px] sm:text-[11px] font-medium text-black/40 tracking-wide'>
+                                <p className='font-gs text-[11px] text-black/40'>
                                     We typically respond within 24 hours
                                 </p>
                             </div>

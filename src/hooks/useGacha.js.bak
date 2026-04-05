@@ -1,0 +1,169 @@
+import { useState, useCallback } from 'react'
+import { useWriteContract, useWaitForTransactionReceipt, useAccount, useReadContract } from 'wagmi'
+import { parseEther } from 'viem'
+
+// Gacha System ABI (simplified for frontend demo)
+const GACHA_ABI = [
+  {
+    "inputs": [],
+    "name": "pull",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PULL_COST",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "address", "name": "user", "type": "address"}],
+    "name": "userPullCount",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getPullOdds",
+    "outputs": [
+      {"internalType": "uint8", "name": "commonOdds", "type": "uint8"},
+      {"internalType": "uint8", "name": "rareOdds", "type": "uint8"},
+      {"internalType": "uint8", "name": "epicOdds", "type": "uint8"},
+      {"internalType": "uint8", "name": "legendaryOdds", "type": "uint8"}
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+]
+
+// Card data matching the contract (6 cards total: 3 Common, 2 Rare, 1 Legendary)
+const cardData = {
+  common: [
+    { id: 'C01', name: 'Killua', anime: 'Hunter x Hunter', power: 'Godspeed', quote: 'I want to be your friend', image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&q=80', tier: 'common' },
+    { id: 'C02', name: 'Zenitsu', anime: 'Demon Slayer', power: 'Thunder Breathing', quote: 'I must be brave', image: 'https://images.unsplash.com/photo-1607604276583-eef5a0b9a281?w=600&q=80', tier: 'common' },
+    { id: 'C03', name: 'Bakugo', anime: 'My Hero Academia', power: 'Explosion', quote: 'I will surpass All Might', image: 'https://images.unsplash.com/photo-1620332373994-3c329830e393?w=600&q=80', tier: 'common' }
+  ],
+  rare: [
+    { id: 'R01', name: 'Levi', anime: 'Attack on Titan', power: 'Ackerman Bloodline', quote: 'Give up on your dreams and die', image: 'https://images.unsplash.com/photo-1620332373994-3c329830e393?w=600&q=80', tier: 'rare' },
+    { id: 'R02', name: 'Gojo', anime: 'Jujutsu Kaisen', power: 'Limitless & Six Eyes', quote: 'I am the strongest', image: 'https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=600&q=80', tier: 'rare' }
+  ],
+  epic: [],
+  legendary: [
+    { id: 'L01', name: 'Goku', anime: 'Dragon Ball', power: 'Ultra Instinct', quote: 'I am the hope of the universe', image: 'https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=600&q=80', tier: 'legendary' }
+  ]
+}
+
+// Probability weights (must match contract)
+const tierWeights = {
+  legendary: 5,  // 5%
+  epic: 10,      // 10%
+  rare: 20,      // 20%
+  common: 65     // 65%
+}
+
+// Mock contract address - replace with actual deployed address
+const GACHA_CONTRACT_ADDRESS = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
+
+export const useGacha = () => {
+  const { address } = useAccount()
+  const [lastWonCard, setLastWonCard] = useState(null)
+  const [isSimulating, setIsSimulating] = useState(false)
+
+  // For demo/frontend simulation mode
+  const simulatePull = useCallback(() => {
+    setIsSimulating(true)
+
+    // Generate random number 0-99
+    const random = Math.floor(Math.random() * 100)
+
+    // Determine tier based on weights
+    let selectedTier
+    if (random < tierWeights.legendary) {
+      selectedTier = 'legendary'
+    } else if (random < tierWeights.legendary + tierWeights.epic) {
+      selectedTier = 'epic'
+    } else if (random < tierWeights.legendary + tierWeights.epic + tierWeights.rare) {
+      selectedTier = 'rare'
+    } else {
+      selectedTier = 'common'
+    }
+
+    // Select random card within tier
+    const tierCards = cardData[selectedTier]
+    const cardIndex = Math.floor(Math.random() * tierCards.length)
+    const wonCard = tierCards[cardIndex]
+
+    // Simulate delay for realistic feel
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setLastWonCard(wonCard)
+        setIsSimulating(false)
+        resolve(wonCard)
+      }, 1500) // 1.5s delay to match animation
+    })
+  }, [])
+
+  // Real blockchain integration (when contract is deployed)
+  const { 
+    writeContract, 
+    isPending: isWritePending, 
+    error: writeError,
+    data: hash 
+  } = useWriteContract()
+
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+    hash,
+  })
+
+  // Read pull odds from contract
+  const { data: pullOdds } = useReadContract({
+    address: GACHA_CONTRACT_ADDRESS,
+    abi: GACHA_ABI,
+    functionName: 'getPullOdds',
+    query: {
+      enabled: GACHA_CONTRACT_ADDRESS !== '0x0000000000000000000000000000000000000000'
+    }
+  })
+
+  // Execute pull - FORCED SIMULATION MODE (no blockchain, no gas fees)
+  const executePull = useCallback(async () => {
+    // Always use simulation - no blockchain interaction, no gas fees
+    return simulatePull()
+  }, [simulatePull])
+
+  // Get pull odds for display
+  const getOdds = useCallback(() => {
+    if (pullOdds) {
+      const [common, rare, epic, legendary] = pullOdds
+      return { common, rare, epic, legendary }
+    }
+    return tierWeights
+  }, [pullOdds])
+
+  return {
+    // Actions
+    pull: executePull,
+    simulatePull,
+    
+    // State
+    lastWonCard,
+    isPending: isSimulating || isWritePending || isConfirming,
+    isSuccess,
+    error: writeError,
+    hash,
+    
+    // Data
+    odds: getOdds(),
+    cardData,
+    
+    // Config
+    pullCost: 0, // FREE for testing
+    contractAddress: GACHA_CONTRACT_ADDRESS,
+    isDemoMode: GACHA_CONTRACT_ADDRESS === '0x0000000000000000000000000000000000000000'
+  }
+}
+
+export default useGacha
