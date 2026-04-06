@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState, startTransition } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Entrance from './components/Entrance'
+import ScrollToTop from './components/ScrollToTop'
 
 // ─── PERFORMANCE: Lazy load only heavy components ───
 const Home = lazy(() => import('./components/Home'))
@@ -54,6 +55,8 @@ const App = () => {
 
   return (
     <div className="relative">
+      <ScrollToTop />
+
       {/* Entrance Animation — Immediate availability for LCP stability */}
       {showEntrance && (
           <Entrance onComplete={handleEntranceComplete} />

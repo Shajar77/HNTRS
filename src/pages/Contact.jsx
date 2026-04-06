@@ -173,9 +173,11 @@ const Contact = () => {
                                     <span className='w-8 h-px bg-[#DE5127]'></span>
                                     <span className='font-gs text-[9px] text-[#DE5127] font-bold tracking-[0.5em] uppercase'>Project Inquiry</span>
                                 </span>
-                                <h2 className='font-2 text-[clamp(2rem,10vw,5rem)] sm:text-[clamp(2.5rem,6vw,4rem)] md:text-[clamp(2rem,4vw,3rem)] lg:text-[clamp(2rem,3vw,2.5rem)] text-black leading-[0.85] tracking-tighter text-safe'>
+                            <div className="overflow-hidden">
+                                <h2 className='font-2 text-[clamp(1.75rem,8vw,5rem)] sm:text-[clamp(2rem,6vw,4rem)] md:text-[clamp(2rem,4vw,3rem)] lg:text-[clamp(2rem,3vw,2.5rem)] text-black leading-[0.9] tracking-[-0.02em] break-words'>
                                     START A <span className='text-[#DE5127]'>PROJECT</span>
                                 </h2>
+                            </div>
                             </div>
                             <p className='font-gs text-[10px] sm:text-[11px] font-medium text-black/40 leading-relaxed max-w-xs pb-1'>
                                 Fill in your details and we'll respond within 24 hours.

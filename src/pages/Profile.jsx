@@ -90,8 +90,8 @@ const Profile = () => {
         <div className='absolute top-32 left-16 w-48 h-48 border border-[#DE5127]/8 rotate-12 pointer-events-none'></div>
         <div className='absolute bottom-32 right-16 w-32 h-32 border border-black/5 -rotate-12 pointer-events-none'></div>
         
-        {/* Mouse glow */}
-        <div className='absolute inset-0 pointer-events-none overflow-hidden'>
+        {/* Mouse glow - hidden on mobile */}
+        <div className='hidden sm:block absolute inset-0 pointer-events-none overflow-hidden'>
           <div ref={spotRef} className='absolute transition-transform duration-500 ease-out' style={{ top: 0, left: 0, transform: 'translate3d(calc(50vw - 150px), calc(50vh - 150px), 0)', willChange: 'transform' }}>
             <div className='w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] rounded-full border border-[#DE5127]/30 flex items-center justify-center'>
               <div className='w-[140px] h-[140px] sm:w-[180px] sm:h-[180px] rounded-full' style={{ background: 'radial-gradient(circle, rgba(222,81,39,0.25) 0%, rgba(222,81,39,0.08) 50%, transparent 70%)' }}></div>
@@ -155,8 +155,8 @@ const Profile = () => {
       <div className='absolute top-32 left-8 w-32 h-32 border-l-2 border-t-2 border-[#DE5127]/20 pointer-events-none'></div>
       <div className='absolute bottom-32 right-8 w-32 h-32 border-r-2 border-b-2 border-black/10 pointer-events-none'></div>
       
-      {/* Mouse glow */}
-      <div className='absolute inset-0 pointer-events-none overflow-hidden'>
+      {/* Mouse glow - hidden on mobile */}
+      <div className='hidden sm:block absolute inset-0 pointer-events-none overflow-hidden'>
         <div ref={spotRef} className='absolute transition-transform duration-500 ease-out' style={{ top: 0, left: 0, transform: 'translate3d(calc(50vw - 150px), calc(50vh - 150px), 0)', willChange: 'transform' }}>
           <div className='w-[250px] h-[250px] sm:w-[300px] sm:h-[300px] rounded-full border border-[#DE5127]/30 flex items-center justify-center'>
             <div className='w-[140px] h-[140px] sm:w-[180px] sm:h-[180px] rounded-full' style={{ background: 'radial-gradient(circle, rgba(222,81,39,0.2) 0%, rgba(222,81,39,0.06) 50%, transparent 70%)' }}></div>
