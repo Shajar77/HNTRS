@@ -4,15 +4,27 @@ pragma solidity ^0.8.20;
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
 /**
  * @title GachaSystem
  * @dev Anime NFT gacha/luck system - 50 MATIC per pull with weighted odds
  */
-contract GachaSystem is ReentrancyGuard, Ownable, Pausable {
+contract GachaSystem is ReentrancyGuard, Ownable, Pausable, IERC721Receiver {
     
     // NFT Contract reference (stored as address for flexibility)
     address public nftContract;
+    
+    // Token ID => Card data mapping
+    mapping(uint256 => CardData) public tokenCardData;
+    
+    // Next token ID for minting
+    uint256 public nextTokenId;
+    
+    // User => token IDs they own (tracked by this contract)
+    mapping(address => uint256[]) public userTokens;
+    mapping(uint256 => bool) public tokenExists;
     
     // Pull cost: 50 MATIC
     uint256 public constant PULL_COST = 50 ether;
@@ -68,10 +80,12 @@ contract GachaSystem is ReentrancyGuard, Ownable, Pausable {
     );
     event FundsWithdrawn(address indexed owner, uint256 amount);
     event NFTContractUpdated(address indexed newContract);
+    event TokenMintRequested(uint256 indexed tokenId, address indexed to, uint8 tier, uint8 cardIndex, string uri);
     
     constructor(address _nftContract) {
-        // Allow zero address for testing (will be set later)
+        require(_nftContract != address(0), "Invalid NFT contract");
         nftContract = _nftContract;
+        nextTokenId = 1;
         
         // Initialize card data
         _initializeCards();
@@ -184,51 +198,46 @@ contract GachaSystem is ReentrancyGuard, Ownable, Pausable {
     /**
      * @dev Check if user already owns a specific card
      */
-    function _userOwnsCard(address user, uint8 tier, uint8 cardIndex) internal view returns (bool) {
-        // Get user's tokens from NFT contract
-        // This would call the NFT contract's balanceOf and tokenOfOwnerByIndex
-        // For demo, simplified to return empty array
-        uint256[] memory userTokens = new uint256[](0);
-        
-        // Check each token's metadata to see if it matches the card
-        for (uint256 i = 0; i < userTokens.length; i++) {
-            // In a real implementation, you'd compare card attributes
-            // For this demo, we'll use a simpler approach with token ID mapping
-            if (_tokenMatchesCard(userTokens[i], tier, cardIndex)) {
+    function _userOwnsCard(address _user, uint8 _tier, uint8 _cardIndex) internal view returns (bool) {
+        uint256[] storage tokens = userTokens[_user];
+        for (uint256 i = 0; i < tokens.length; i++) {
+            CardData storage cardData = tokenCardData[tokens[i]];
+            if (cardData.tier == _tier && cardData.cardIndex == _cardIndex) {
                 return true;
             }
         }
-        
         return false;
     }
     
     /**
-     * @dev Check if a token ID represents a specific card
-     * This is a simplified check - in production you'd use a mapping
+     * @dev Internal: Mint card NFT - generates token ID and tracks ownership
+     * The actual NFT minting happens through the external NFT contract
+     * This function emits an event that can be used by backend services
      */
-    function _tokenMatchesCard(uint256 tokenId, uint8 tier, uint8 cardIndex) internal pure returns (bool) {
-        // Generate deterministic token ID from tier and card index
-        // Token ID format: (tier * 1000) + cardIndex + startingOffset
-        uint256 expectedStart = uint256(tier) * 1000 + uint256(cardIndex) * 100;
-        uint256 expectedEnd = expectedStart + 99;
+    function _mintCard(address _to, uint8 _tier, uint8 _cardIndex) internal returns (uint256) {
+        // Generate a unique token ID
+        uint256 tokenId = nextTokenId;
+        nextTokenId++;
         
-        return tokenId >= expectedStart && tokenId <= expectedEnd;
-    }
-    
-    /**
-     * @dev Mint card NFT to user
-     */
-    function _mintCard(address to, uint8 tier, uint8 cardIndex) internal returns (uint256) {
-        CardData memory card = cards[tier][cardIndex];
+        // Store card data for this token
+        CardData storage card = cards[_tier][_cardIndex];
+        tokenCardData[tokenId] = CardData({
+            tier: _tier,
+            cardIndex: _cardIndex,
+            name: card.name,
+            anime: card.anime,
+            power: card.power,
+            quote: card.quote,
+            imageURI: card.imageURI
+        });
         
-        // Create metadata URI with card data
-        string memory metadataURI = _generateMetadataURI(card);
+        // Track ownership
+        userTokens[_to].push(tokenId);
+        tokenExists[tokenId] = true;
         
-        // Generate deterministic token ID
-        uint256 tokenIdBase = uint256(tier) * 1000 + uint256(cardIndex) * 100;
-        uint256 tokenId = tokenIdBase + mintedCards[tier][cardIndex];
+        // Emit event for external NFT contract to mint
+        emit TokenMintRequested(tokenId, _to, _tier, _cardIndex, _generateTokenURI(_tier, _cardIndex));
         
-        // Mint via NFT contract - need to call as owner/minter
         // In production, this contract should have MINTER_ROLE
         // For now, we'll emit the event and handle minting off-chain or via separate call
         
@@ -247,6 +256,40 @@ contract GachaSystem is ReentrancyGuard, Ownable, Pausable {
             "/",
             card.name
         ));
+    }
+    
+    /**
+     * @dev Generate token URI for a card by tier and index
+     */
+    function _generateTokenURI(uint8 _tier, uint8 _cardIndex) internal view returns (string memory) {
+        CardData storage card = cards[_tier][_cardIndex];
+        return string(abi.encodePacked(
+            "https://api.hntrs.io/gacha/",
+            tierNames[_tier],
+            "/",
+            card.name
+        ));
+    }
+    
+    /**
+     * @dev Convert uint to string
+     */
+    function _uint2str(uint256 _i) internal pure returns (string memory) {
+        if (_i == 0) return "0";
+        uint256 j = _i;
+        uint256 length;
+        while (j != 0) {
+            length++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(length);
+        uint256 k = length;
+        j = _i;
+        while (j != 0) {
+            bstr[--k] = bytes1(uint8(48 + j % 10));
+            j /= 10;
+        }
+        return string(bstr);
     }
     
     /**
@@ -328,6 +371,18 @@ contract GachaSystem is ReentrancyGuard, Ownable, Pausable {
             tierWeights[2],
             tierWeights[3]
         );
+    }
+    
+    /**
+     * @dev ERC721Receiver hook - allows contract to receive NFTs
+     */
+    function onERC721Received(
+        address,
+        address,
+        uint256,
+        bytes calldata
+    ) external pure override returns (bytes4) {
+        return IERC721Receiver.onERC721Received.selector;
     }
     
     receive() external payable {}

@@ -386,7 +386,7 @@ const Marketplace = () => {
           
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div>
-              <h1 className='font-2 text-[12vw] sm:text-[10vw] md:text-[7vw] lg:text-[5vw] text-black leading-[0.85] tracking-[-0.02em]'>Market</h1>
+              <h1 className='font-2 text-[clamp(2.5rem,12vw,6rem)] sm:text-[clamp(3rem,10vw,5rem)] md:text-[clamp(2.5rem,7vw,4rem)] lg:text-[clamp(2rem,5vw,3.5rem)] text-black leading-[0.85] tracking-[-0.02em] text-safe'>Market</h1>
               <div className="flex items-center gap-4 mt-6">
                 <span className='w-16 h-px bg-black/20'></span>
                 <span className='font-gs text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.4em] text-black/40'>Collect unique sports NFTs</span>
@@ -409,7 +409,7 @@ const Marketplace = () => {
           className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-16"
         >
           {/* Filter Tabs */}
-          <div className="flex gap-2 bg-black/[0.03] p-2">
+          <div className="flex flex-wrap gap-2 bg-black/[0.03] p-2">
             {[
               { id: 'all', label: 'All Items', count: listings.length },
               { id: 'fixed', label: 'Fixed Price' },
@@ -420,7 +420,7 @@ const Marketplace = () => {
                 onClick={() => setFilter(f.id)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className={`px-6 py-3 font-gs text-[10px] uppercase tracking-[0.15em] transition-all duration-300 flex items-center gap-2 ${
+                className={`px-4 sm:px-6 py-2.5 sm:py-3 font-gs text-[9px] sm:text-[10px] uppercase tracking-[0.15em] transition-all duration-300 flex items-center gap-2 ${
                   filter === f.id
                     ? 'bg-[#DE5127] text-white shadow-md shadow-[#DE5127]/20'
                     : 'text-black/50 hover:text-black hover:bg-black/[0.02]'
@@ -458,43 +458,37 @@ const Marketplace = () => {
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                className="w-20 h-20 border-3 border-black/10 border-t-[#DE5127] rounded-full mx-auto mb-6"
+                className="w-16 h-16 sm:w-20 sm:h-20 border-2 sm:border-3 border-black/10 border-t-[#DE5127] rounded-full mx-auto mb-6"
               />
               <p className="text-sm font-gs text-black/40 uppercase tracking-widest">Loading...</p>
             </div>
           </div>
         ) : sortedListings.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {sortedListings.map((listing, index) => (
               <NFTCard key={listing.listingId.toString() + index} listing={listing} index={index} />
             ))}
           </div>
         ) : (
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-32"
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="flex flex-col items-center justify-center py-32 sm:py-40"
           >
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: "spring", stiffness: 200 }}
-              className="w-32 h-32 mx-auto mb-10 rounded-2xl bg-gradient-to-br from-[#DE5127]/10 to-[#FF8F6B]/10 flex items-center justify-center"
-            >
-              <svg className="w-16 h-16 text-[#DE5127]/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-              </svg>
-            </motion.div>
-            <h3 className="text-4xl font-bold text-black mb-4 tracking-tight">No Listings Yet</h3>
-            <p className="text-lg text-black/50 mb-10 font-gs max-w-md mx-auto">
-              Be the first to list an NFT on the marketplace
+            <h3 className="font-2 text-3xl sm:text-4xl lg:text-5xl text-black tracking-tight mb-3">
+              Market is <span className="text-[#DE5127]">empty</span>
+            </h3>
+            <p className="font-gs text-sm sm:text-base text-black/40 mb-8 text-center">
+              Be the first to list an NFT
             </p>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}>
               <Link
                 to="/mint"
-                className="inline-block px-10 py-4 bg-gradient-to-r from-[#DE5127] to-[#FF8F6B] text-white font-gs font-bold text-xs uppercase tracking-[0.25em] rounded-full hover:from-black hover:to-black transition-all duration-500 shadow-lg shadow-[#DE5127]/30"
+                className="group relative inline-flex items-center px-8 py-3 bg-[#DE5127] text-white font-gs text-sm font-medium overflow-hidden shadow-[0_8px_30px_-10px_rgba(222,81,39,0.4)] hover:shadow-[0_20px_40px_-12px_rgba(222,81,39,0.5)] transition-all duration-500"
               >
-                Create NFT
+                <span className="relative z-10 tracking-wide">Create First NFT</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#FF8F6B] to-[#DE5127] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
               </Link>
             </motion.div>
           </motion.div>

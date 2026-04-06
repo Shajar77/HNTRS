@@ -5,12 +5,13 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 
 /**
  * @title CardMarketplace
  * @dev Direct card purchase and user-to-user marketplace
  */
-contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
+contract CardMarketplace is ReentrancyGuard, Ownable, Pausable, IERC721Receiver {
     
     // NFT Contract reference
     IERC721 public nftContract;
@@ -59,6 +60,12 @@ contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
     // Token ID => current listing ID (0 if not listed)
     mapping(uint256 => uint256) public tokenListing;
     
+    // Token ID => Card ID mapping
+    mapping(uint256 => string) public tokenCardId;
+    
+    // Next token ID for minting
+    uint256 public nextTokenId;
+    
     // Track user's owned tokens
     mapping(address => uint256[]) public userTokens;
     mapping(uint256 => bool) public tokenExists;
@@ -79,6 +86,7 @@ contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
         require(_nftContract != address(0), "Invalid NFT contract");
         nftContract = IERC721(_nftContract);
         nextListingId = 1;
+        nextTokenId = 1;
         
         // Initialize cards with fixed prices
         _initializeCards();
@@ -272,23 +280,57 @@ contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
     }
     
     /**
-     * @dev Internal: Mint card NFT
+     * @dev Internal: Mint card NFT - generates token ID and tracks ownership
+     * The actual NFT minting happens through the external NFT contract
+     * This function emits an event that can be used by backend services
      */
     function _mintCard(address _to, string memory _cardId) internal returns (uint256) {
-        // In production, this would call the NFT contract
-        // For now, generate a deterministic token ID
-        uint256 tokenId = uint256(keccak256(abi.encodePacked(_cardId, block.timestamp, _to, cards[_cardId].currentSupply)));
+        // Generate a unique token ID
+        uint256 tokenId = nextTokenId;
+        nextTokenId++;
+        
+        // Store the card ID for this token
+        tokenCardId[tokenId] = _cardId;
+        
+        // Track ownership
+        userTokens[_to].push(tokenId);
+        tokenExists[tokenId] = true;
+        
+        // Emit event for external NFT contract to mint
+        emit TokenMintRequested(tokenId, _to, _cardId, _generateTokenURI(_cardId));
+        
         return tokenId;
     }
     
     /**
-     * @dev Get card ID from token ID (simplified)
+     * @dev Generate token URI for a card
      */
-    function getCardIdFromToken(uint256 _tokenId) public pure returns (string memory) {
-        // In production, this would decode from token metadata
-        // For now, return placeholder
-        return "C01";
+    function _generateTokenURI(string memory _cardId) internal view returns (string memory) {
+        // Return a simplified URI - in production this would be IPFS or API endpoint
+        return string(abi.encodePacked(
+            "https://api.hntrs.io/cards/",
+            _cardId
+        ));
     }
+    
+    /**
+     * @dev Get card ID from token ID
+     */
+    function getCardIdFromToken(uint256 _tokenId) public view returns (string memory) {
+        return tokenCardId[_tokenId];
+    }
+    
+    /**
+     * @dev Callback for NFT contract to confirm minting
+     * This should be called by the NFT contract after minting
+     */
+    function confirmMint(uint256 _tokenId, address _owner) external {
+        require(msg.sender == address(nftContract), "Only NFT contract");
+        require(tokenExists[_tokenId], "Token not tracked");
+        // Additional verification can be added here
+    }
+    
+    event TokenMintRequested(uint256 indexed tokenId, address indexed to, string cardId, string uri);
     
     /**
      * @dev Remove token from user's list
@@ -403,6 +445,18 @@ contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
     function updateCardPrice(string memory _cardId, uint256 _newPrice) public onlyOwner {
         require(bytes(cards[_cardId].id).length > 0, "Card does not exist");
         cards[_cardId].price = _newPrice;
+    }
+    
+    /**
+     * @dev ERC721Receiver hook - allows contract to receive NFTs
+     */
+    function onERC721Received(
+        address,
+        address,
+        uint256,
+        bytes calldata
+    ) external pure override returns (bytes4) {
+        return IERC721Receiver.onERC721Received.selector;
     }
     
     receive() external payable {}

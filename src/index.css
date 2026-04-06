@@ -6,17 +6,29 @@ html {
     padding: 0;
     overflow-x: hidden;
     width: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-
+/* Safe area insets for mobile devices */
+@supports (padding: max(0px)) {
+    .safe-top {
+        padding-top: max(1rem, env(safe-area-inset-top));
+    }
+    .safe-bottom {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+    .safe-x {
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+    }
+}
 
 @font-face {
     font-family: font2;
     src: url("/font2.ttf") format("truetype");
     font-display: swap;
 }
-
-
 
 @font-face {
     font-family: font6;
@@ -50,8 +62,6 @@ html {
 .font-2 {
     font-family: "font2", sans-serif;
 }
-
-
 
 .font-6 {
     font-family: "font6", sans-serif;
@@ -94,14 +104,82 @@ canvas {
     height: auto;
 }
 
+/* Fluid typography utilities - prevents overflow */
+.text-fluid-xs {
+    font-size: clamp(0.625rem, 1.5vw, 0.75rem);
+}
 
+.text-fluid-sm {
+    font-size: clamp(0.75rem, 2vw, 0.875rem);
+}
 
-/* Fluid Typography */
+.text-fluid-base {
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.text-fluid-lg {
+    font-size: clamp(1rem, 3vw, 1.125rem);
+}
+
+.text-fluid-xl {
+    font-size: clamp(1.125rem, 4vw, 1.25rem);
+}
+
+.text-fluid-2xl {
+    font-size: clamp(1.25rem, 5vw, 1.5rem);
+}
+
+.text-fluid-3xl {
+    font-size: clamp(1.5rem, 6vw, 1.875rem);
+}
+
+.text-fluid-hero {
+    font-size: clamp(2.5rem, 8vw, 6rem);
+}
+
 .text-fluid-huge {
     font-size: clamp(4rem, 15vw, 18rem);
 }
 
+/* Responsive padding utilities */
+.px-responsive {
+    padding-left: clamp(0.75rem, 4vw, 7rem);
+    padding-right: clamp(0.75rem, 4vw, 7rem);
+}
 
+.py-responsive {
+    padding-top: clamp(2rem, 6vw, 9rem);
+    padding-bottom: clamp(2rem, 6vw, 9rem);
+}
+
+/* Ensure text never overflows */
+.text-safe {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    min-width: 0;
+}
+
+/* Prevent element overflow */
+.overflow-safe {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Responsive grid gap */
+.gap-responsive {
+    gap: clamp(0.75rem, 3vw, 2rem);
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
 
 ::selection {
     background: var(--accent);
@@ -125,8 +203,6 @@ canvas {
     background: var(--accent);
 }
 
-
-
 .ease-expo {
     transition-timing-function: var(--ease-expo);
 }
@@ -144,8 +220,6 @@ canvas {
 .animate-scroll-line {
     animation: scroll-line 2s ease-in-out infinite;
 }
-
-
 
 @media (prefers-reduced-motion: reduce) {
     html {

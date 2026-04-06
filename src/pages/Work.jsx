@@ -61,7 +61,7 @@ const Work = () => {
                         </div>
                         
                         <div className='flex flex-col lg:flex-row lg:items-end justify-between gap-8 mb-16'>
-                            <h1 className='font-2 text-[15vw] sm:text-[12vw] lg:text-[10vw] text-black leading-[0.85] tracking-tighter'>
+                            <h1 className='font-2 text-[clamp(3rem,15vw,7rem)] sm:text-[clamp(3.5rem,12vw,6rem)] lg:text-[clamp(4rem,10vw,8rem)] text-black leading-[0.85] tracking-tighter text-safe'>
                                 NFT<br />
                                 <span className='text-[#DE5127]'>DROPS</span>
                             </h1>
@@ -173,7 +173,7 @@ const Work = () => {
                     className='max-w-4xl mx-auto text-center'
                 >
                     <p className='font-gs text-[10px] text-[#DE5127] font-bold tracking-[0.5em] uppercase mb-6'>Start Hunting</p>
-                    <h2 className='font-2 text-[10vw] sm:text-[8vw] lg:text-[5vw] text-white leading-[0.9] tracking-tighter mb-8'>
+                    <h2 className='font-2 text-[clamp(2.5rem,10vw,5rem)] sm:text-[clamp(3rem,8vw,4rem)] lg:text-[clamp(3rem,5vw,4rem)] text-white leading-[0.9] tracking-tighter mb-8 text-safe'>
                         Ready to Collect?
                     </h2>
                     <div className='flex flex-col sm:flex-row justify-center gap-4'>

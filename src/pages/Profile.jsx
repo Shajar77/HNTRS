@@ -110,22 +110,22 @@ const Profile = () => {
               </div>
               
               {/* Main Title */}
-              <div className="relative mb-8">
-                <h1 className='font-2 text-[14vw] sm:text-[12vw] md:text-[10vw] lg:text-[8vw] text-black leading-[0.8] tracking-[-0.03em]'>PROFILE</h1>
+              <div className="relative mb-6 sm:mb-8">
+                <h1 className='font-2 text-[clamp(3rem,14vw,7rem)] sm:text-[clamp(3.5rem,12vw,6rem)] md:text-[clamp(3rem,10vw,5rem)] lg:text-[clamp(3rem,8vw,4rem)] text-black leading-[0.8] tracking-[-0.03em] text-safe'>PROFILE</h1>
                 <motion.div 
                   initial={{ scale: 0 }} 
                   animate={{ scale: 1 }} 
                   transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-                  className='absolute -top-2 -right-4 sm:top-0 sm:right-8 w-6 h-6 sm:w-8 sm:h-8 bg-[#DE5127] flex items-center justify-center shadow-lg shadow-[#DE5127]/30'>
-                  <span className='font-2 text-white text-[8px] sm:text-[10px]'>R</span>
+                  className='absolute -top-1 -right-2 sm:top-0 sm:right-8 w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 bg-[#DE5127] flex items-center justify-center shadow-lg shadow-[#DE5127]/30'>
+                  <span className='font-2 text-white text-[7px] sm:text-[8px] md:text-[10px]'>R</span>
                 </motion.div>
               </div>
               
               {/* Subtitle */}
-              <p className="font-7 italic text-[#DE5127] text-xl sm:text-2xl md:text-3xl tracking-tight mb-12">manage your assets</p>
+              <p className="font-7 italic text-[#DE5127] text-lg sm:text-xl md:text-2xl lg:text-3xl tracking-tight mb-8 sm:mb-12">manage your assets</p>
               
               {/* Description */}
-              <p className="font-gs text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.4em] text-black/40 mb-16 max-w-lg mx-auto leading-relaxed">
+              <p className="font-gs text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.3em] sm:tracking-[0.4em] text-black/40 mb-12 sm:mb-16 max-w-md mx-auto leading-relaxed text-safe">
                 Connect your wallet to view your NFTs and manage listings
               </p>
               
@@ -174,7 +174,7 @@ const Profile = () => {
           
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
             <div>
-              <h1 className='font-2 text-[12vw] sm:text-[10vw] md:text-[7vw] lg:text-[5vw] text-black leading-[0.85] tracking-[-0.02em]'>Collection</h1>
+              <h1 className='font-2 text-[clamp(2.5rem,12vw,6rem)] sm:text-[clamp(3rem,10vw,5rem)] md:text-[clamp(2.5rem,7vw,4rem)] lg:text-[clamp(2rem,5vw,3.5rem)] text-black leading-[0.85] tracking-[-0.02em] text-safe'>Collection</h1>
               <div className="flex items-center gap-4 mt-6">
                 <span className='w-16 h-px bg-black/20'></span>
                 <span className='font-gs text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.4em] text-black/40'>Manage your assets</span>

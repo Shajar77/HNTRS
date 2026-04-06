@@ -2,17 +2,17 @@ import Boxes from './Boxes'
 
 const Services = () => {
     return (
-        <div className='flex flex-col bg-[#F1F1F1] py-32 overflow-hidden' style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 1000px' }}>
-            <div className='px-6 sm:px-10 md:px-16 lg:px-24 mb-24'>
-                <div className='flex flex-col xl:flex-row xl:items-end justify-between gap-8'>
-                    <p className='font-6 text-[13vw] sm:text-fluid-huge opacity-90 leading-[0.8] tracking-tighter text-center xl:text-left uppercase'>
+        <div className='flex flex-col bg-[#F1F1F1] py-20 sm:py-28 md:py-32 overflow-hidden' style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 1000px' }}>
+            <div className='px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24 mb-16 sm:mb-20 md:mb-24'>
+                <div className='flex flex-col xl:flex-row xl:items-end justify-between gap-6 sm:gap-8'>
+                    <p className='font-6 text-[clamp(3rem,13vw,10rem)] sm:text-[clamp(3.5rem,12vw,9rem)] lg:text-fluid-huge opacity-90 leading-[0.8] tracking-tighter text-center xl:text-left uppercase text-safe'>
                         SERVICES
                     </p>
-                    <p className='font-gs text-xs font-black tracking-[0.5em] uppercase text-[#DE5127] mb-4 text-center xl:text-right'>
+                    <p className='font-gs text-xs font-black tracking-[0.5em] uppercase text-[#DE5127] mb-2 sm:mb-4 text-center xl:text-right'>
                         What HNTRS Offers
                     </p>
                 </div>
-                <div className='w-full h-px bg-black/10 mt-12' />
+                <div className='w-full h-px bg-black/10 mt-8 sm:mt-10 md:mt-12' />
             </div>
 
             <div className='flex flex-col'>

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useWriteContract, useWaitForTransactionReceipt, useAccount, useReadContract } from 'wagmi'
 import { parseEther } from 'viem'
 
@@ -217,8 +217,8 @@ const MARKETPLACE_ABI = [
   }
 ]
 
-// Mock contract address - replace with actual deployed address
-const MARKETPLACE_CONTRACT_ADDRESS = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
+// Contract address from environment or fallback to localhost for development
+const MARKETPLACE_CONTRACT_ADDRESS = import.meta.env.VITE_MARKETPLACE_CONTRACT_AMOY || '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512'
 
 // Platform fee in basis points (2.5%)
 const PLATFORM_FEE_BPS = 250
@@ -228,6 +228,19 @@ export const useCardMarketplace = () => {
   const [ownedCards, setOwnedCards] = useState([])
   const [userListings, setUserListings] = useState([])
   const [marketplaceListings, setMarketplaceListings] = useState([])
+  const [error, setError] = useState(null)
+  
+  // Refs for cleanup
+  const intervalsRef = useRef([])
+  const timeoutsRef = useRef([])
+  
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      intervalsRef.current.forEach(id => clearInterval(id))
+      timeoutsRef.current.forEach(id => clearTimeout(id))
+    }
+  }, [])
 
   // Write contract hooks
   const { 
@@ -298,10 +311,11 @@ export const useCardMarketplace = () => {
     const card = cardData.find(c => c.id === cardId)
     if (!card) throw new Error('Card not found')
 
-    // Convert price to wei if it's not already
-    const priceInWei = typeof price === 'string' && price.includes('.') 
-      ? parseEther(price)
-      : parseEther(price.toString())
+    // Convert price to wei - price is in MATIC (ether units)
+    const priceInWei = parseEther(price.toString())
+
+    // Clear previous error
+    setError(null)
 
     // Execute contract buy
     buyCardWrite({
@@ -312,26 +326,36 @@ export const useCardMarketplace = () => {
       value: priceInWei
     })
 
-    // Return promise that resolves when transaction confirms
     return new Promise((resolve, reject) => {
-      const checkSuccess = setInterval(() => {
+      const intervalId = setInterval(() => {
         if (isBuySuccess) {
-          clearInterval(checkSuccess)
+          clearInterval(intervalId)
+          intervalsRef.current = intervalsRef.current.filter(id => id !== intervalId)
           const newCard = { ...card, tokenId: Date.now() }
           setOwnedCards(prev => [...prev, newCard])
           resolve(newCard)
         }
         if (buyError) {
-          clearInterval(checkSuccess)
+          clearInterval(intervalId)
+          intervalsRef.current = intervalsRef.current.filter(id => id !== intervalId)
+          setError(buyError)
           reject(buyError)
         }
       }, 1000)
       
+      intervalsRef.current.push(intervalId)
+      
       // Timeout after 60 seconds
-      setTimeout(() => {
-        clearInterval(checkSuccess)
-        reject(new Error('Transaction timeout'))
+      const timeoutId = setTimeout(() => {
+        clearInterval(intervalId)
+        intervalsRef.current = intervalsRef.current.filter(id => id !== intervalId)
+        timeoutsRef.current = timeoutsRef.current.filter(id => id !== timeoutId)
+        const timeoutError = new Error('Transaction timeout')
+        setError(timeoutError)
+        reject(timeoutError)
       }, 60000)
+      
+      timeoutsRef.current.push(timeoutId)
     })
   }, [buyCardWrite, isBuySuccess, buyError])
 
@@ -349,9 +373,10 @@ export const useCardMarketplace = () => {
     })
 
     return new Promise((resolve, reject) => {
-      const checkSuccess = setInterval(() => {
+      const intervalId = setInterval(() => {
         if (isListSuccess) {
-          clearInterval(checkSuccess)
+          clearInterval(intervalId)
+          intervalsRef.current = intervalsRef.current.filter(id => id !== intervalId)
           const listing = {
             listingId: Date.now(),
             cardId: card.id,
@@ -365,15 +390,21 @@ export const useCardMarketplace = () => {
           resolve(listing)
         }
         if (listError) {
-          clearInterval(checkSuccess)
+          clearInterval(intervalId)
+          intervalsRef.current = intervalsRef.current.filter(id => id !== intervalId)
           reject(listError)
         }
       }, 1000)
       
-      setTimeout(() => {
-        clearInterval(checkSuccess)
+      intervalsRef.current.push(intervalId)
+      
+      const timeoutId = setTimeout(() => {
+        clearInterval(intervalId)
+        intervalsRef.current = intervalsRef.current.filter(id => id !== intervalId)
         reject(new Error('Transaction timeout'))
       }, 60000)
+      
+      timeoutsRef.current.push(timeoutId)
     })
   }, [listCardWrite, isListSuccess, listError, ownedCards, address])
 
@@ -387,23 +418,34 @@ export const useCardMarketplace = () => {
     })
 
     return new Promise((resolve, reject) => {
-      const checkSuccess = setInterval(() => {
+      const intervalId = setInterval(() => {
         if (isDelistSuccess) {
-          clearInterval(checkSuccess)
+          clearInterval(intervalId)
+          intervalsRef.current = intervalsRef.current.filter(id => id !== intervalId)
           setUserListings(prev => prev.filter(l => l.listingId !== listingId))
           setMarketplaceListings(prev => prev.filter(l => l.listingId !== listingId))
           resolve(true)
         }
         if (delistError) {
-          clearInterval(checkSuccess)
+          clearInterval(intervalId)
+          intervalsRef.current = intervalsRef.current.filter(id => id !== intervalId)
+          setError(delistError)
           reject(delistError)
         }
       }, 1000)
       
-      setTimeout(() => {
-        clearInterval(checkSuccess)
-        reject(new Error('Transaction timeout'))
+      intervalsRef.current.push(intervalId)
+      
+      const timeoutId = setTimeout(() => {
+        clearInterval(intervalId)
+        intervalsRef.current = intervalsRef.current.filter(id => id !== intervalId)
+        timeoutsRef.current = timeoutsRef.current.filter(id => id !== timeoutId)
+        const timeoutError = new Error('Transaction timeout')
+        setError(timeoutError)
+        reject(timeoutError)
       }, 60000)
+      
+      timeoutsRef.current.push(timeoutId)
     })
   }, [delistCardWrite, isDelistSuccess, delistError])
 
@@ -418,9 +460,10 @@ export const useCardMarketplace = () => {
     })
 
     return new Promise((resolve, reject) => {
-      const checkSuccess = setInterval(() => {
+      const intervalId = setInterval(() => {
         if (isMarketplaceBuySuccess) {
-          clearInterval(checkSuccess)
+          clearInterval(intervalId)
+          intervalsRef.current = intervalsRef.current.filter(id => id !== intervalId)
           const listing = marketplaceListings.find(l => l.listingId === listingId)
           if (listing) {
             const card = cardData.find(c => c.id === listing.cardId)
@@ -433,15 +476,20 @@ export const useCardMarketplace = () => {
           resolve(true)
         }
         if (marketplaceBuyError) {
-          clearInterval(checkSuccess)
+          clearInterval(intervalId)
+          intervalsRef.current = intervalsRef.current.filter(id => id !== intervalId)
           reject(marketplaceBuyError)
         }
       }, 1000)
       
-      setTimeout(() => {
-        clearInterval(checkSuccess)
+      intervalsRef.current.push(intervalId)
+      
+      const timeoutId = setTimeout(() => {
+        clearInterval(intervalId)
         reject(new Error('Transaction timeout'))
       }, 60000)
+      
+      timeoutsRef.current.push(timeoutId)
     })
   }, [buyFromMarketplaceWrite, isMarketplaceBuySuccess, marketplaceBuyError, marketplaceListings])
 
@@ -512,7 +560,10 @@ export const useCardMarketplace = () => {
     isSuccess: isBuySuccess || isListSuccess || isDelistSuccess || isMarketplaceBuySuccess,
     
     // Errors
-    error: buyError || listError || delistError || marketplaceBuyError,
+    error: error || buyError || listError || delistError || marketplaceBuyError,
+    
+    // Clear error function
+    clearError: () => setError(null),
     
     // Config
     platformFeeBps: PLATFORM_FEE_BPS,

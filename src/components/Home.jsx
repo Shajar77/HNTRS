@@ -135,15 +135,15 @@ const Home = () => {
                                 <span className='font-gs text-[10px] text-[#DE5127] font-bold tracking-[0.35em] uppercase'>Web3 Sports NFTs</span>
                             </div>
 
-                            <h1 className='font-2 text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[5.5vw] text-black leading-[0.85] tracking-[-0.03em] mb-6'>
+                            <h1 className='font-2 text-[clamp(3rem,14vw,8rem)] sm:text-[clamp(3.5rem,11vw,7rem)] md:text-[clamp(4rem,9vw,6rem)] lg:text-[clamp(3rem,5.5vw,5rem)] text-black leading-[0.85] tracking-[-0.03em] mb-6 text-safe'>
                                 HNTRS
                             </h1>
                             
-                            <p className='font-7 italic text-[#DE5127] text-xl sm:text-2xl mb-8'>
+                            <p className='font-7 italic text-[#DE5127] text-lg sm:text-xl md:text-2xl mb-8 text-safe'>
                                 The Future of Sports Collectibles
                             </p>
 
-                            <p className='font-gs text-sm text-black/50 mb-12 max-w-md leading-relaxed'>
+                            <p className='font-gs text-sm text-black/50 mb-12 max-w-md leading-relaxed text-safe'>
                                 Create, trade, and collect unique sports NFTs on the blockchain. 
                                 Built for athletes, fans, and creators.
                             </p>
@@ -174,15 +174,15 @@ const Home = () => {
                             </div>
                         </div>
 
-                        <div className='hero-scale-in relative flex items-center justify-center'>
-                            <div className='relative w-64 h-64 sm:w-80 sm:h-80'>
+                        <div className='hero-scale-in relative flex items-center justify-center w-full'>
+                            <div className='relative w-48 h-48 sm:w-64 sm:h-64 md:w-72 md:h-72 lg:w-80 lg:h-80 max-w-full'>
                                 <div className='absolute inset-0 border border-[#DE5127]/20 spin-slow-30' />
-                                <div className='absolute inset-4 border border-black/10 spin-slow-reverse-25' />
-                                <div className='absolute inset-8 flex flex-col items-center justify-center p-6'>
+                                <div className='absolute inset-3 sm:inset-4 border border-black/10 spin-slow-reverse-25' />
+                                <div className='absolute inset-6 sm:inset-8 flex flex-col items-center justify-center p-4'>
                                     <img 
                                         src="/images/logo.png" 
                                         alt="HNTRS Logo" 
-                                        className="w-full h-full object-contain filter drop-shadow-sm" 
+                                        className="w-full h-full object-contain filter drop-shadow-sm max-w-[120px] sm:max-w-[160px] md:max-w-full" 
                                     />
                                 </div>
                             </div>

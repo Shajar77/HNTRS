@@ -12,9 +12,9 @@ const Collect = () => {
   const { ownedCards } = useCardMarketplace()
 
   const tabs = [
-    { id: 'store', name: 'Card Store', icon: Store, description: 'Buy cards directly' },
-    { id: 'marketplace', name: 'Marketplace', icon: ShoppingBag, description: 'Buy from collectors' },
-    { id: 'collection', name: 'My Collection', icon: Package, description: `${ownedCards.length} cards` }
+    { id: 'store', name: 'Store', mobileName: 'Store', icon: Store },
+    { id: 'marketplace', name: 'Market', mobileName: 'Market', icon: ShoppingBag },
+    { id: 'collection', name: 'Collection', mobileName: 'My Cards', icon: Package }
   ]
 
   return (
@@ -52,11 +52,10 @@ const Collect = () => {
       </section>
 
       {/* Tab Navigation */}
-      <section className="relative px-6 sm:px-12 md:px-20 lg:px-28 pb-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex gap-2">
+      <section className="relative px-4 sm:px-8 md:px-12 lg:px-20 xl:px-28 pb-6">
+        <div className="max-w-lg">
+          <div className="flex bg-white/5">
             {tabs.map((tab) => {
-              const Icon = tab.icon
               const isActive = activeTab === tab.id
               
               return (
@@ -65,15 +64,16 @@ const Collect = () => {
                   onClick={() => setActiveTab(tab.id)}
                   whileTap={{ scale: 0.98 }}
                   className={`
-                    flex items-center gap-2 px-4 py-2.5 rounded-lg transition-all duration-200
+                    flex items-center justify-center px-4 sm:px-6 py-3 transition-all duration-300 flex-1
                     ${isActive 
-                      ? 'bg-[#DE5127]/10 text-[#DE5127] border border-[#DE5127]/20' 
-                      : 'bg-transparent text-white/50 hover:text-white/70 hover:bg-white/[0.03] border border-transparent'
+                      ? 'bg-[#DE5127] text-white' 
+                      : 'text-white/40 hover:text-white/60'
                     }
                   `}
                 >
-                  <Icon className="w-4 h-4" />
-                  <span className="font-gs text-[12px] font-bold uppercase tracking-wider">{tab.name}</span>
+                  <span className="font-gs text-[10px] sm:text-xs font-medium uppercase tracking-[0.3em]">
+                    {tab.name}
+                  </span>
                 </motion.button>
               )
             })}

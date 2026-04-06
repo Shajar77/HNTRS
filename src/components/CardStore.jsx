@@ -42,13 +42,15 @@ const stringHash = (value) => {
 const CardStore = () => {
   const { isConnected } = useAccount()
   const { connect, connectors, isPending: isConnecting } = useConnect()
-  const { getAllCards, buyCard, getCardsByTier } = useCardMarketplace()
+  const { getAllCards, buyCard, getCardsByTier, error: marketplaceError, clearError } = useCardMarketplace()
   const [selectedTier, setSelectedTier] = useState('all')
   const [buyingCard, setBuyingCard] = useState(null)
   const [showSuccess, setShowSuccess] = useState(false)
   const [purchasedCard, setPurchasedCard] = useState(null)
   const [showTierInfo, setShowTierInfo] = useState(false)
   const [flippedCard, setFlippedCard] = useState(null)
+  const [showError, setShowError] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   const allCards = getAllCards()
   const cards = selectedTier === 'all' ? allCards : getCardsByTier(selectedTier)
@@ -94,14 +96,20 @@ const CardStore = () => {
     }
     
     setBuyingCard(card.id)
+    clearError()
     try {
-      // Always pay the contract-backed card price to avoid payment mismatch reverts.
       const purchased = await buyCard(card.id, card.price)
       setPurchasedCard(purchased)
       setShowSuccess(true)
       setTimeout(() => setShowSuccess(false), 3000)
     } catch (error) {
       console.error('Purchase failed:', error)
+      setErrorMessage(error?.message || 'Transaction failed. Please try again.')
+      setShowError(true)
+      setTimeout(() => {
+        setShowError(false)
+        clearError()
+      }, 5000)
     }
     setBuyingCard(null)
   }
@@ -156,7 +164,7 @@ const CardStore = () => {
             return (
               <div
                 key={card.id}
-                className="group relative h-[400px]"
+                className="group relative h-[380px]"
                 onMouseEnter={() => setFlippedCard(card.id)}
                 onMouseLeave={() => setFlippedCard(null)}
               >
@@ -178,20 +186,19 @@ const CardStore = () => {
                   >
                   {/* FRONT FACE */}
                   <div 
-                    className={`absolute inset-0 rounded-2xl border overflow-hidden ${isCustomTheme ? `hover:shadow-[0_0_40px_-10px_${theme.primary}40]` : 'hover:shadow-[0_0_30px_-5px_rgba(255,255,255,0.15)]'}`}
+                    className={`absolute inset-0 rounded-md border overflow-hidden backdrop-blur-sm ${isCustomTheme ? `hover:shadow-[0_8px_32px_-8px_${theme.primary}50]` : 'hover:shadow-[0_8px_32px_-8px_rgba(255,255,255,0.1)]'}`}
                     style={{
                       backfaceVisibility: 'hidden',
                       pointerEvents: isFlipped ? 'none' : 'auto',
-                      background: `linear-gradient(145deg, ${theme.bg} 0%, #0a0a0a 50%, ${theme.bg} 100%)`,
-                      borderColor: isCustomTheme ? `${theme.border}40` : 'rgba(255,255,255,0.1)',
-                      boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.05), inset 0 -1px 1px rgba(0,0,0,0.3), 0 4px 20px rgba(0,0,0,0.4)'
+                      background: `linear-gradient(165deg, ${theme.bg}90 0%, #0a0a0a 50%, ${theme.bg}80 100%)`,
+                      borderColor: isCustomTheme ? `${theme.border}50` : 'rgba(255,255,255,0.08)',
+                      boxShadow: '0 4px 24px -1px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)'
                     }}
                   >
-                    {/* Metallic Chrome Bevel */}
-                    <div className="absolute inset-0 rounded-2xl pointer-events-none z-0"
+                    {/* Premium Edge Highlight */}
+                    <div className="absolute inset-0 rounded-md pointer-events-none z-0"
                       style={{
-                        background: 'linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.3) 100%)',
-                        padding: '1px'
+                        background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 100%)',
                       }}
                     />
 
@@ -289,18 +296,21 @@ const CardStore = () => {
 
                   {/* BACK FACE - Clean Story Design */}
                   <div 
-                    className="absolute inset-0 rounded-2xl border overflow-hidden"
+                    className="absolute inset-0 rounded-md border overflow-hidden backdrop-blur-sm"
                     style={{
                       backfaceVisibility: 'hidden',
                       transform: 'rotateY(180deg)',
                       pointerEvents: isFlipped ? 'auto' : 'none',
-                      background: `linear-gradient(180deg, ${theme.bg} 0%, #0a0a0a 100%)`,
-                      borderColor: `${theme.border}40`,
+                      background: `linear-gradient(165deg, ${theme.bg}90 0%, #0a0a0a 100%)`,
+                      borderColor: `${theme.border}50`,
+                      boxShadow: '0 4px 24px -1px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)'
                     }}
                   >
-                    {/* Subtle gradient overlay */}
-                    <div className="absolute inset-0 opacity-30"
-                      style={{ background: `radial-gradient(ellipse at top, ${theme.primary}20, transparent 70%)` }}
+                    {/* Premium Edge Highlight */}
+                    <div className="absolute inset-0 rounded-md pointer-events-none"
+                      style={{
+                        background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 25%, transparent 75%, rgba(0,0,0,0.2) 100%)',
+                      }}
                     />
                     
                     {/* Content */}
@@ -384,6 +394,42 @@ const CardStore = () => {
     </AnimatePresence>
   </div>
 
+      {/* Error Modal */}
+      <AnimatePresence>
+        {showError && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+          >
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowError(false)} />
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative bg-[#1a1a1a] border border-red-500/30 rounded-2xl p-6 max-w-md w-full shadow-2xl"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-red-500/20 flex items-center justify-center">
+                  <svg className="w-5 h-5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </div>
+                <h3 className="font-2 text-xl text-white">Transaction Failed</h3>
+              </div>
+              <p className="text-white/60 text-sm mb-6">{errorMessage}</p>
+              <button
+                onClick={() => setShowError(false)}
+                className="w-full py-3 bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg font-gs text-xs uppercase tracking-wider hover:bg-red-500/30 transition-colors"
+              >
+                Dismiss
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Success Modal */}
       <AnimatePresence>
         {showSuccess && purchasedCard && (
@@ -391,45 +437,31 @@ const CardStore = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4"
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setShowSuccess(false)} />
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              className="relative bg-gradient-to-b from-[#18181b] to-[#0c0c0e] rounded-3xl border border-white/[0.08] p-8 max-w-sm w-full text-center"
+              className="relative bg-[#1a1a1a] border border-[#DE5127]/30 rounded-2xl p-6 max-w-md w-full shadow-2xl"
             >
-              <button 
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h3 className="font-2 text-xl text-white">Purchase Successful!</h3>
+              </div>
+              <p className="text-white/60 text-sm mb-2">You now own</p>
+              <p className="font-2 text-2xl text-[#DE5127] mb-6">{purchasedCard.name}</p>
+              <button
                 onClick={() => setShowSuccess(false)}
-                className="absolute top-4 right-4 p-1 text-white/30 hover:text-white/60"
+                className="w-full py-3 bg-[#DE5127] text-white rounded-lg font-gs text-xs uppercase tracking-wider hover:bg-[#c44520] transition-colors"
               >
-                <X className="w-4 h-4" />
+                Continue
               </button>
-              
-              <div className="w-16 h-16 rounded-full bg-green-500/20 flex items-center justify-center mx-auto mb-4">
-                <Check className="w-8 h-8 text-green-400" />
-              </div>
-              
-              <h3 className="font-2 text-xl text-white mb-2">Purchase Successful!</h3>
-              <p className="text-white/50 text-sm mb-4">
-                You now own <span className="text-white font-medium">{purchasedCard.name}</span>
-              </p>
-              
-              <div className="p-4 bg-white/[0.03] rounded-xl">
-                <img 
-                  src={purchasedCard.image} 
-                  alt={purchasedCard.name}
-                  className="w-full h-32 object-cover rounded-lg mb-3"
-                />
-                <p className="text-white font-medium">{purchasedCard.name}</p>
-                <p className="text-[10px] text-white/40 uppercase">{purchasedCard.tier}</p>
-                {popularityData[purchasedCard.id] && (
-                  <p className="text-[10px] text-white/60 mt-2">
-                    Popularity Score: {popularityData[purchasedCard.id].popularityScore}
-                  </p>
-                )}
-              </div>
             </motion.div>
           </motion.div>
         )}

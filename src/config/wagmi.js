@@ -23,6 +23,16 @@ export const CONTRACT_ADDRESSES = {
   },
 }
 
+// Validate contract addresses in development
+if (import.meta.env.DEV) {
+  if (!import.meta.env.VITE_NFT_CONTRACT_AMOY) {
+    console.warn('VITE_NFT_CONTRACT_AMOY is not set. NFT features may not work.')
+  }
+  if (!import.meta.env.VITE_MARKETPLACE_CONTRACT_AMOY) {
+    console.warn('VITE_MARKETPLACE_CONTRACT_AMOY is not set. Marketplace features may not work.')
+  }
+}
+
 // Supported chain names for display
 export const CHAIN_NAMES = {
   [polygonAmoy.id]: 'Polygon Amoy (Testnet)',

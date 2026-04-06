@@ -101,8 +101,8 @@ const Contact = () => {
                 </div>
 
                 {/* Giant background text */}
-                <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none'>
-                    <span className='font-2 text-[40vw] sm:text-[35vw] md:text-[30vw] text-black/[0.03] leading-none whitespace-nowrap'>SAY HI</span>
+                <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none select-none w-full overflow-hidden'>
+                    <span className='font-2 text-[clamp(4rem,40vw,25rem)] sm:text-[clamp(5rem,35vw,20rem)] md:text-[clamp(6rem,30vw,18rem)] text-black/[0.03] leading-none whitespace-nowrap block text-center text-safe'>SAY HI</span>
                 </div>
 
                 {/* Content */}
@@ -124,9 +124,9 @@ const Contact = () => {
                         </p>
 
                         {/* Big email */}
-                        <a href="mailto:graphichunters.com" className='group relative mb-6'>
-                            <h1 className='font-2 text-[8vw] sm:text-[6vw] md:text-[5vw] lg:text-[4vw] xl:text-[3.5vw] text-black leading-[1] tracking-tighter group-hover:text-[#DE5127] transition-colors duration-700'>
-                                GRAPHIC<br className='sm:hidden' />HUNTERS.COM
+                        <a href="mailto:graphichunters.com" className='group relative mb-4 sm:mb-6 block w-full'>
+                            <h1 className='font-2 text-[clamp(1.5rem,8vw,4rem)] sm:text-[clamp(2rem,6vw,3.5rem)] md:text-[clamp(1.5rem,5vw,3rem)] lg:text-[clamp(1.5rem,4vw,3.5rem)] xl:text-[clamp(2rem,3.5vw,3.5rem)] text-black leading-[1] tracking-tighter group-hover:text-[#DE5127] transition-colors duration-700 text-safe'>
+                                GRAPHIC<span className="hidden sm:inline"><br /></span>HUNTERS.COM
                             </h1>
                             {/* Underline animation */}
                             <div className='absolute bottom-0 left-0 right-0 h-[2px] bg-[#DE5127] origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-700 ease-expo'></div>
@@ -173,7 +173,7 @@ const Contact = () => {
                                     <span className='w-8 h-px bg-[#DE5127]'></span>
                                     <span className='font-gs text-[9px] text-[#DE5127] font-bold tracking-[0.5em] uppercase'>Project Inquiry</span>
                                 </span>
-                                <h2 className='font-2 text-[10vw] sm:text-[6vw] md:text-[4vw] lg:text-[3vw] text-black leading-[0.85] tracking-tighter'>
+                                <h2 className='font-2 text-[clamp(2rem,10vw,5rem)] sm:text-[clamp(2.5rem,6vw,4rem)] md:text-[clamp(2rem,4vw,3rem)] lg:text-[clamp(2rem,3vw,2.5rem)] text-black leading-[0.85] tracking-tighter text-safe'>
                                     START A <span className='text-[#DE5127]'>PROJECT</span>
                                 </h2>
                             </div>

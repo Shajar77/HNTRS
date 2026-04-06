@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
  * @dev Popularity-based card marketplace with dynamic pricing
  * All cards start at equal base price, prices adjust based on on-chain metrics
  */
-contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
+contract CardMarketplaceV2 is ReentrancyGuard, Ownable, Pausable {
     
     // NFT Contract reference
     IERC721 public nftContract;
@@ -64,6 +64,7 @@ contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
     event FundsWithdrawn(address indexed owner, uint256 amount);
     
     constructor(address _nftContract) {
+        require(_nftContract != address(0), "Invalid NFT contract");
         nftContract = IERC721(_nftContract);
     }
     
@@ -84,12 +85,19 @@ contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
         // Mint or transfer NFT (simplified - in production this would call NFT contract)
         uint256 tokenId = _mintCard(_cardId, msg.sender);
         
+        // Transfer platform fee to contract balance (withdrawable by owner)
+        // Platform fee stays in contract for owner to withdraw
+        
+        // Transfer remaining payment to seller
+        (bool success, ) = payable(msg.sender).call{value: sellerAmount}("");
+        require(success, "Transfer failed");
+        
         emit CardPurchased(msg.sender, _cardId, tokenId, currentPrice);
         
-        // Refund excess
+        // Refund excess payment
         if (msg.value > currentPrice) {
-            (bool success, ) = msg.sender.call{value: msg.value - currentPrice}("");
-            require(success, "Refund failed");
+            (bool refundSuccess, ) = payable(msg.sender).call{value: msg.value - currentPrice}("");
+            require(refundSuccess, "Refund failed");
         }
         
         return tokenId;
@@ -157,7 +165,7 @@ contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
         nftContract.transferFrom(address(this), msg.sender, listing.tokenId);
         
         // Pay seller
-        (bool success, ) = listing.seller.call{value: sellerAmount}("");
+        (bool success, ) = payable(listing.seller).call{value: sellerAmount}("");
         require(success, "Payment to seller failed");
         
         listing.active = false;
@@ -166,7 +174,7 @@ contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
         
         // Refund excess
         if (msg.value > listing.price) {
-            (bool refundSuccess, ) = msg.sender.call{value: msg.value - listing.price}("");
+            (bool refundSuccess, ) = payable(msg.sender).call{value: msg.value - listing.price}("");
             require(refundSuccess, "Refund failed");
         }
     }
@@ -311,7 +319,7 @@ contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
         uint256 balance = address(this).balance;
         require(balance > 0, "No funds");
         
-        (bool success, ) = owner().call{value: balance}("");
+        (bool success, ) = payable(owner()).call{value: balance}("");
         require(success, "Transfer failed");
         
         emit FundsWithdrawn(owner(), balance);
@@ -320,7 +328,8 @@ contract CardMarketplace is ReentrancyGuard, Ownable, Pausable {
     /**
      * @dev Owner: Update NFT contract address
      */
-    function setNFTContract(address _nftContract) external onlyOwner {
+    function setNFTContract(address _nftContract) public onlyOwner {
+        require(_nftContract != address(0), "Invalid address");
         nftContract = IERC721(_nftContract);
     }
     
