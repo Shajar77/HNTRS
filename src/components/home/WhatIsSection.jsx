@@ -51,35 +51,34 @@ const WhatIsSection = () => {
                     >
                         <div className='bg-white/60 backdrop-blur-sm border border-black/[0.06] p-8 sm:p-12 shadow-[0_20px_60px_-15px_rgba(0,0,0,0.05)]'>
                             <h3 className='font-7 italic text-[#DE5127] text-xl sm:text-2xl md:text-3xl mb-6 sm:mb-8 text-safe'>
-                                The Future of Sports Memorabilia
+                                Premium Anime Card Collectibles
                             </h3>
                             <div className='space-y-4 sm:space-y-6 font-gs text-black/60 leading-relaxed text-sm sm:text-base'>
                                 <p className='text-safe'>
-                                    <span className='text-black font-medium'>HNTRS</span> is a next-generation decentralized platform 
-                                    revolutionizing how sports digital assets are created, traded, and collected. Built on the 
-                                    <span className='text-[#DE5127] font-medium'> Polygon blockchain</span>, we provide athletes, 
-                                    sports organizations, digital artists, and fans with a seamless ecosystem to mint, buy, sell, 
-                                    and showcase NFTs.
+                                    <span className='text-black font-medium'>HNTRS</span> is a next-generation NFT marketplace 
+                                    for anime character cards. Built on the 
+                                    <span className='text-[#DE5127] font-medium'> Polygon blockchain</span>, we offer collectors 
+                                    a complete ecosystem to buy, sell, and discover premium digital cards.
                                 </p>
                                 <p className='text-safe'>
-                                    Every NFT minted on HNTRS represents verifiable ownership of unique digital sports memorabilia — 
-                                    from iconic moments and player highlights to exclusive artwork and limited edition collectibles. 
-                                    Our platform supports all major sports including football, basketball, tennis, cricket, and more.
+                                    Cards are organized into four rarity tiers — Common, Rare, Epic, and Legendary — 
+                                    each with unique artwork and limited supply. Collect your favorite characters 
+                                    from popular anime series and build your ultimate deck.
                                 </p>
                                 <p className='text-safe'>
-                                    With customizable royalty settings, creators earn from secondary sales forever. Our smart contracts 
-                                    ensure transparent, secure transactions with near-zero gas fees thanks to Polygon's efficient 
-                                    infrastructure.
+                                    Our dynamic pricing system adjusts card values based on popularity and demand. 
+                                    The Gacha system offers randomized packs with weighted odds for each tier. 
+                                    Smart contracts ensure secure, transparent transactions with low Polygon gas fees.
                                 </p>
                             </div>
                             <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-8 sm:mt-10 pt-8 sm:pt-10 border-t border-black/[0.06]'>
                                 {[
-                                    { label: 'Sports Supported', value: '10+' },
-                                    { label: 'Blockchain', value: 'Polygon' },
-                                    { label: 'Storage', value: 'IPFS' }
+                                    { label: 'Card Tiers', value: '4' },
+                                    { label: 'Total Cards', value: '16' },
+                                    { label: 'Gacha Odds', value: 'Rarity' }
                                 ].map((item) => (
                                     <div key={item.label} className='text-center'>
-                                        <p className='font-2 text-xl sm:text-2xl text-[#DE5127] mb-1'>{item.value}</p>
+                                        <p className='font-2 text-lg sm:text-xl md:text-2xl text-[#DE5127] mb-1 truncate' title={item.value}>{item.value}</p>
                                         <p className='font-gs text-[10px] uppercase tracking-[0.15em] text-black/40'>{item.label}</p>
                                     </div>
                                 ))}
@@ -125,7 +124,7 @@ const WhatIsSection = () => {
                     ref={pillsRef}
                     className={`mt-16 flex flex-wrap justify-center gap-4 transition-all duration-700 delay-500 ${pillsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
                 >
-                    {['Mint NFTs', 'Fixed Price', 'Auctions', 'IPFS Storage', 'Custom Royalties', 'Multi-Sport'].map((item) => (
+                    {['Card Store', 'Gacha System', 'Marketplace', '4 Tiers', 'Dynamic Pricing', 'Polygon'].map((item) => (
                         <span key={item} className='px-6 py-3 bg-white/60 backdrop-blur-sm border border-black/[0.08] font-gs text-[11px] uppercase tracking-[0.15em] text-black/60'>
                             {item}
                         </span>

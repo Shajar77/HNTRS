@@ -93,9 +93,9 @@ const Home = () => {
     }, [])
 
     const steps = [
-        { number: '01', title: 'Connect Wallet', description: 'Link your Web3 wallet to access the platform' },
-        { number: '02', title: 'Mint or Browse', description: 'Create your own NFTs or explore the marketplace' },
-        { number: '03', title: 'Trade & Collect', description: 'Buy, sell, and build your sports NFT collection' }
+        { number: '01', title: 'Connect Wallet', description: 'Link your Web3 wallet to access the anime card marketplace' },
+        { number: '02', title: 'Browse or Gacha', description: 'Buy cards from the store or test your luck with randomized gacha packs' },
+        { number: '03', title: 'Collect & Trade', description: 'Build your collection and trade with other collectors on the marketplace' }
     ]
 
     return (
@@ -132,7 +132,7 @@ const Home = () => {
                         <div className='hero-fade-up'>
                             <div className='flex items-center gap-3 mb-8'>
                                 <span className='w-8 h-[2px] bg-[#DE5127]' />
-                                <span className='font-gs text-[10px] text-[#DE5127] font-bold tracking-[0.35em] uppercase'>Web3 Sports NFTs</span>
+                                <span className='font-gs text-[10px] text-[#DE5127] font-bold tracking-[0.35em] uppercase'>Anime NFT Collectibles</span>
                             </div>
 
                             <h1 className='font-2 text-[clamp(3rem,14vw,8rem)] sm:text-[clamp(3.5rem,11vw,7rem)] md:text-[clamp(4rem,9vw,6rem)] lg:text-[clamp(3rem,5.5vw,5rem)] text-black leading-[0.85] tracking-[-0.03em] mb-6 text-safe'>
@@ -140,12 +140,12 @@ const Home = () => {
                             </h1>
                             
                             <p className='font-7 italic text-[#DE5127] text-lg sm:text-xl md:text-2xl mb-8 text-safe'>
-                                The Future of Sports Collectibles
+                                Collect, Trade & Gacha Anime Cards
                             </p>
 
                             <p className='font-gs text-sm text-black/50 mb-12 max-w-md leading-relaxed text-safe'>
-                                Create, trade, and collect unique sports NFTs on the blockchain. 
-                                Built for athletes, fans, and creators.
+                                Discover premium anime character cards across four rarity tiers. 
+                                Buy from the Card Store, try your luck with Gacha packs, or trade on the Marketplace.
                             </p>
 
                             <div className='flex flex-col sm:flex-row gap-4'>
