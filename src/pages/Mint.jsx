@@ -193,8 +193,8 @@ const Mint = () => {
               </div>
               
               {/* Main Title */}
-              <div className="relative mb-6 sm:mb-8">
-                <h1 className='font-2 text-[clamp(3rem,14vw,7rem)] sm:text-[clamp(3.5rem,12vw,6rem)] md:text-[clamp(3rem,10vw,5rem)] lg:text-[clamp(3rem,8vw,4rem)] text-black leading-[0.8] tracking-[-0.03em] text-safe'>CREATE</h1>
+              <div className="relative mb-6 sm:mb-8 overflow-hidden">
+                <h1 className='font-2 text-[clamp(1.75rem,10vw,7rem)] sm:text-[clamp(3rem,12vw,6rem)] md:text-[clamp(3.5rem,10vw,5rem)] lg:text-[clamp(3rem,8vw,4rem)] text-black leading-[0.85] tracking-[-0.02em] break-words'>CREATE</h1>
                 <motion.div 
                   initial={{ scale: 0 }} 
                   animate={{ scale: 1 }} 
@@ -256,8 +256,8 @@ const Mint = () => {
           </div>
           
           <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <div>
-              <h1 className='font-2 text-[clamp(2.5rem,12vw,6rem)] sm:text-[clamp(3rem,10vw,5rem)] md:text-[clamp(2.5rem,7vw,4rem)] lg:text-[clamp(2rem,5vw,3.5rem)] text-black leading-[0.85] tracking-[-0.02em] text-safe'>Mint NFT</h1>
+            <div className="overflow-hidden">
+              <h1 className='font-2 text-[clamp(1.75rem,10vw,6rem)] sm:text-[clamp(2.5rem,10vw,5rem)] md:text-[clamp(2.5rem,7vw,4rem)] lg:text-[clamp(2rem,5vw,3.5rem)] text-black leading-[0.9] tracking-[-0.01em] break-words'>Mint NFT</h1>
               <div className="flex items-center gap-4 mt-6">
                 <span className='w-16 h-px bg-black/20'></span>
                 <span className='font-gs text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.4em] text-black/40'>Step {step} of 3</span>
